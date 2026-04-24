@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Personal Portfolio Admin
 
-## Getting Started
+Portfolio pribadi berbasis `Next.js App Router + TypeScript + Tailwind CSS + Sanity CMS`. Website publik dirender statis dengan revalidation, dan Sanity Studio di-embed pada route `/studio`.
 
-First, run the development server:
+## Local development
+
+1. Copy environment example:
+
+```bash
+cp .env.local.example .env.local
+```
+
+2. Isi `.env.local` dengan nilai project Sanity Anda:
+
+```env
+NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
+NEXT_PUBLIC_SANITY_DATASET=production
+NEXT_PUBLIC_SANITY_API_VERSION=2025-02-19
+```
+
+3. Install dependencies jika belum:
+
+```bash
+npm install
+```
+
+4. Jalankan development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+URL lokal:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Website: `http://localhost:3000`
+- Admin Studio: `http://localhost:3000/studio`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Jika environment Sanity belum diisi, website tetap tampil memakai placeholder lokal dan route `/studio` akan menampilkan instruksi setup.
 
-## Learn More
+## Cara mengisi Sanity
 
-To learn more about Next.js, take a look at the following resources:
+1. Buat project Sanity lewat dashboard atau CLI Anda sendiri.
+2. Masukkan `projectId` dan `dataset` ke `.env.local`.
+3. Restart server.
+4. Buka `/studio`.
+5. Isi dokumen singleton:
+   - `Profile`
+   - `Site Settings`
+6. Tambahkan dokumen koleksi:
+   - `Project`
+   - `Post`
+   - `Skill`
+   - `Experience`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Schema sudah menyediakan field yang dibutuhkan untuk homepage, about, projects, blog, dan contact.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploy ke Vercel
 
-## Deploy on Vercel
+1. Push project ke repository Git Anda sendiri.
+2. Import repository tersebut ke Vercel.
+3. Tambahkan environment variables berikut di Project Settings:
+   - `NEXT_PUBLIC_SANITY_PROJECT_ID`
+   - `NEXT_PUBLIC_SANITY_DATASET`
+   - `NEXT_PUBLIC_SANITY_API_VERSION`
+4. Jalankan deploy.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Checklist setelah deploy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Buka homepage dan cek metadata dasar.
+- Pastikan `/studio` bisa login dan publish konten.
+- Isi `Profile` dan `Site Settings`.
+- Tambahkan minimal 2 project dan 2 artikel.
+- Verifikasi halaman dinamis `/projects/[slug]` dan `/blog/[slug]`.
+- Cek `sitemap.xml` dan `robots.txt`.
+
+## Struktur folder penting
+
+- `app/`: route publik, metadata, sitemap, robots, dan route `/studio`
+- `components/`: komponen layout dan card reusable
+- `sanity.config.ts`: konfigurasi studio embedded
+- `sanity/schemaTypes/`: schema dokumen Sanity
+- `sanity/lib/`: env, query, metadata helper, content fetching, dan fallback placeholder
+- `.env.local.example`: daftar environment variables yang perlu diisi
+
+## Validation scripts
+
+- Lint: `npm run lint`
+- Build: `npm run build`
