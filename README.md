@@ -2,76 +2,151 @@
 
 Portfolio pribadi berbasis `Next.js App Router + TypeScript + Tailwind CSS + Sanity CMS`. Website publik dirender statis dengan revalidation, dan Sanity Studio di-embed pada route `/studio`.
 
-## Local development
+## URL lokal
 
-1. Copy environment example:
+- Website: `http://localhost:3000`
+- Admin Studio: `http://localhost:3000/studio`
+
+## Environment variables
+
+Copy file contoh lalu isi nilainya:
 
 ```bash
 cp .env.local.example .env.local
 ```
 
-2. Isi `.env.local` dengan nilai project Sanity Anda:
+Isi `.env.local` seperti ini:
 
 ```env
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
 NEXT_PUBLIC_SANITY_DATASET=production
 NEXT_PUBLIC_SANITY_API_VERSION=2025-02-19
 ```
 
-3. Install dependencies jika belum:
+Penjelasan:
 
-```bash
-npm install
-```
+- `NEXT_PUBLIC_SITE_URL`: URL publik website. Lokal pakai `http://localhost:3000`, production ganti ke domain Vercel atau custom domain Anda.
+- `NEXT_PUBLIC_SANITY_PROJECT_ID`: Project ID dari project Sanity Anda.
+- `NEXT_PUBLIC_SANITY_DATASET`: Dataset Sanity, biasanya `production`.
+- `NEXT_PUBLIC_SANITY_API_VERSION`: API date Sanity. Biarkan `2025-02-19` kecuali Anda memang ingin mengganti.
 
-4. Jalankan development server:
+Jika environment Sanity belum diisi, website tetap tampil memakai placeholder lokal dan `/studio` akan menampilkan instruksi setup.
+
+## Setup Sanity yang spesifik
+
+1. Login ke Sanity di browser: `https://www.sanity.io/manage`
+2. Buat project baru atau pakai project yang sudah ada.
+3. Ambil `Project ID` dari project tersebut.
+4. Pastikan Anda punya dataset `production`.
+5. Isi `.env.local`:
+   - `NEXT_PUBLIC_SITE_URL=http://localhost:3000`
+   - `NEXT_PUBLIC_SANITY_PROJECT_ID=<project-id-anda>`
+   - `NEXT_PUBLIC_SANITY_DATASET=production`
+   - `NEXT_PUBLIC_SANITY_API_VERSION=2025-02-19`
+6. Restart development server:
 
 ```bash
 npm run dev
 ```
 
-URL lokal:
-
-- Website: `http://localhost:3000`
-- Admin Studio: `http://localhost:3000/studio`
-
-Jika environment Sanity belum diisi, website tetap tampil memakai placeholder lokal dan route `/studio` akan menampilkan instruksi setup.
-
-## Cara mengisi Sanity
-
-1. Buat project Sanity lewat dashboard atau CLI Anda sendiri.
-2. Masukkan `projectId` dan `dataset` ke `.env.local`.
-3. Restart server.
-4. Buka `/studio`.
-5. Isi dokumen singleton:
+7. Buka `http://localhost:3000/studio`
+8. Login dengan akun Sanity Anda.
+9. Isi dokumen singleton:
    - `Profile`
    - `Site Settings`
-6. Tambahkan dokumen koleksi:
+10. Tambahkan dokumen koleksi:
    - `Project`
    - `Post`
    - `Skill`
    - `Experience`
 
-Schema sudah menyediakan field yang dibutuhkan untuk homepage, about, projects, blog, dan contact.
+Minimal konten yang sebaiknya Anda isi setelah login:
 
-## Deploy ke Vercel
+- `Profile`: nama, headline, short bio, bio, long bio, email, location
+- `Site Settings`: title, tagline, email, location, contact intro, social links, SEO defaults
+- `Project`: title, slug, excerpt, body, tech stack, year, role, featured, demo URL, repo URL
+- `Post`: title, slug, excerpt, published date, tags, body
+- `Skill`: nama skill
+- `Experience`: role, company, period, summary
 
-1. Push project ke repository Git Anda sendiri.
-2. Import repository tersebut ke Vercel.
-3. Tambahkan environment variables berikut di Project Settings:
+## Menjalankan project lokal
+
+Install dependency bila belum ada:
+
+```bash
+npm install
+```
+
+Jalankan dev server:
+
+```bash
+npm run dev
+```
+
+Validasi:
+
+```bash
+npm run lint
+npm run build
+```
+
+## Deploy ke Vercel untuk repo ini
+
+Catatan:
+
+- Saya tidak melakukan deploy otomatis.
+- Instruksi ini ditujukan untuk repo GitHub `Orville610/portofolio`.
+- Vercel mendukung import project langsung dari GitHub, lalu environment variables diisi dari dashboard project.
+
+Langkah deploy:
+
+1. Buka `https://vercel.com/new`
+2. Login ke Vercel dengan akun yang terhubung ke GitHub Anda.
+3. Import repository `Orville610/portofolio`
+4. Saat Vercel mendeteksi framework:
+   - framework preset: `Next.js`
+   - root directory: gunakan folder project yang berisi `package.json`
+5. Tambahkan Environment Variables di Vercel:
+   - `NEXT_PUBLIC_SITE_URL`
    - `NEXT_PUBLIC_SANITY_PROJECT_ID`
    - `NEXT_PUBLIC_SANITY_DATASET`
    - `NEXT_PUBLIC_SANITY_API_VERSION`
-4. Jalankan deploy.
+6. Isi minimal nilai production:
+
+```env
+NEXT_PUBLIC_SITE_URL=https://your-project-name.vercel.app
+NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
+NEXT_PUBLIC_SANITY_DATASET=production
+NEXT_PUBLIC_SANITY_API_VERSION=2025-02-19
+```
+
+7. Klik `Deploy`
+8. Setelah build selesai, buka URL production
+9. Verifikasi route berikut:
+   - `/`
+   - `/about`
+   - `/projects`
+   - `/blog`
+   - `/contact`
+   - `/studio`
+   - `/sitemap.xml`
+   - `/robots.txt`
+
+Sumber acuan Vercel:
+
+- GitHub import dan project setup: `vercel.com` docs
+- Environment variables untuk framework deployments: `vercel.com/docs/environment-variables/framework-environment-variables`
 
 ## Checklist setelah deploy
 
-- Buka homepage dan cek metadata dasar.
-- Pastikan `/studio` bisa login dan publish konten.
-- Isi `Profile` dan `Site Settings`.
-- Tambahkan minimal 2 project dan 2 artikel.
-- Verifikasi halaman dinamis `/projects/[slug]` dan `/blog/[slug]`.
-- Cek `sitemap.xml` dan `robots.txt`.
+- Homepage tampil normal
+- Metadata tidak lagi menunjuk ke `localhost`
+- `/studio` bisa login
+- `Profile` dan `Site Settings` sudah terisi
+- Minimal 2 project dan 2 artikel sudah dipublish
+- Halaman dinamis `/projects/[slug]` dan `/blog/[slug]` terbuka normal
+- Jika memakai custom domain, update `NEXT_PUBLIC_SITE_URL` ke domain final lalu redeploy
 
 ## Struktur folder penting
 
@@ -81,8 +156,3 @@ Schema sudah menyediakan field yang dibutuhkan untuk homepage, about, projects, 
 - `sanity/schemaTypes/`: schema dokumen Sanity
 - `sanity/lib/`: env, query, metadata helper, content fetching, dan fallback placeholder
 - `.env.local.example`: daftar environment variables yang perlu diisi
-
-## Validation scripts
-
-- Lint: `npm run lint`
-- Build: `npm run build`

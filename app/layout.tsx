@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { siteUrl } from "@/sanity/env";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("http://localhost:3000"),
+  metadataBase: new URL(siteUrl),
   title: {
     default: "Personal Portfolio Admin",
     template: "%s | Personal Portfolio Admin",
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
     description:
       "Portfolio pribadi berbasis Next.js dan Sanity dengan admin panel embedded.",
     type: "website",
-    url: "http://localhost:3000",
+    url: siteUrl,
   },
   twitter: {
     card: "summary_large_image",

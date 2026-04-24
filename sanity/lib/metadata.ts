@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { siteUrl } from "@/sanity/env";
 import { fallbackSiteSettings } from "./fallback-data";
 
 type BuildMetadataInput = {
@@ -12,7 +13,7 @@ export function buildMetadata({
   description,
   path,
 }: BuildMetadataInput): Metadata {
-  const url = `http://localhost:3000${path}`;
+  const url = `${siteUrl}${path}`;
 
   return {
     title,

@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { siteUrl } from "@/sanity/env";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -9,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/studio"],
       },
     ],
-    sitemap: "http://localhost:3000/sitemap.xml",
+    sitemap: `${siteUrl}/sitemap.xml`,
   };
 }
