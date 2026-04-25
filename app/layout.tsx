@@ -3,6 +3,7 @@ import "./globals.css";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { siteUrl } from "@/sanity/env";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -47,6 +48,7 @@ export default function RootLayout({
           </main>
           <SiteFooter />
         </div>
+        <SpeedInsights />
       </body>
     </html>
   );
