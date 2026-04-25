@@ -1,0 +1,46 @@
+{
+  "name": "personal-portfolio-admin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@portabletext/react": "3.0.17",
+    "@sanity/client": "6.22.1",
+    "@sanity/image-url": "1.2.0",
+    "@sanity/schema": "3.60.0",
+    "@sanity/types": "3.60.0",
+    "@sanity/vision": "3.60.0",
+    "clsx": "2.1.1",
+    "lucide-react": "1.11.0",
+    "next": "15.5.15",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "sanity": "3.60.0",
+    "styled-components": "6.4.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "3.3.5",
+    "@tailwindcss/postcss": "4.1.17",
+    "@types/node": "20.19.25",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@typescript-eslint/eslint-plugin": "8.46.2",
+    "@typescript-eslint/parser": "8.46.2",
+    "eslint": "9.36.0",
+    "eslint-config-next": "15.5.15",
+    "tailwindcss": "4.1.17",
+    "typescript": "5.9.3"
+  },
+  "overrides": {
+    "@sanity/export": "3.41.0",
+    "@sanity/import": "3.37.3",
+    "@sanity/mutator": "3.60.0",
+    "@sanity/types": "3.60.0",
+    "@sanity/util": "3.60.0"
+  }
+}
