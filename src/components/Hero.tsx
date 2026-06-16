@@ -78,7 +78,7 @@ export default function Hero() {
           {/* Hero Name / Header */}
           <div className="space-y-4 w-full">
             <h1 className="font-headline-lg-mobile md:font-headline-lg text-4xl md:text-5xl lg:text-6xl text-on-surface tracking-tight font-extrabold uppercase leading-none">
-              <span className="text-primary block mb-2">Orville</span> Giovanni
+              <span className="text-primary block mb-2">Orville Giovanni</span> Sambono
             </h1>
 
             {/* Typing CLI Subtitle */}

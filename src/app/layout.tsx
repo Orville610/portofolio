@@ -15,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Orville Giovanni Sambono - Portfolio",
+  title: "Orville Giovanni Sambono | Portfolio",
   description:
     "Portfolio of Orville Giovanni Sambono, a Software Engineer & Linux & Cloud Enthusiast. Engineering robust solutions from bare metal to the cloud, self-hosted environments, and distributed networking.",
   keywords: [

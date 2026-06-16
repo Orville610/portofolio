@@ -8,12 +8,12 @@ export default function Footer() {
       <div className="container flex flex-col md:flex-row justify-between items-center px-4 md:px-8 py-6 max-w-max-width mx-auto gap-4">
         {/* Footer Brand Logo */}
         <div className="font-headline-md text-lg font-bold tracking-tight text-on-surface">
-          ORVILLE.GIOVANNI
+          RVILLE
         </div>
 
         {/* Footer Status / Copyright */}
         <div className="font-code-sm text-xs md:text-sm text-on-surface-variant text-muted-foreground select-none">
-          &copy; {new Date().getFullYear()} ORVILLE GIOVANNI SAMBONO | CLOUD_INFRA_V1.0
+          &copy; {new Date().getFullYear()} RVILLE | CLOUD_INFRA_V1.0
         </div>
 
         {/* Social Links */}
