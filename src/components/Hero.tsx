@@ -1,11 +1,22 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import { FolderOpen, Mail } from "lucide-react";
 import Image from "next/image";
 
 export default function Hero() {
+  const photoContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!photoContainerRef.current) return;
+    const rect = photoContainerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    photoContainerRef.current.style.setProperty("--mouse-x", `${x}px`);
+    photoContainerRef.current.style.setProperty("--mouse-y", `${y}px`);
+  };
+
   return (
     <section className="relative min-h-[50vh] flex items-center py-10 w-full">
       {/* Background ambient glow */}
@@ -17,16 +28,35 @@ export default function Hero() {
         
         {/* Photo Column - Appears first (top) on mobile, second (right) on desktop */}
         <motion.div
+          ref={photoContainerRef}
+          onMouseMove={handleMouseMove}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="order-1 md:order-2 md:col-span-5 relative group w-full max-w-sm px-4 md:px-0 md:max-w-none mb-8 md:mb-0"
+          className="order-1 md:order-2 md:col-span-5 relative group w-full max-w-sm px-4 md:px-0 md:max-w-none mb-8 md:mb-0 cursor-crosshair"
         >
-          {/* Glowing backdrop layer */}
-          <div className="absolute -inset-2 bg-gradient-to-r from-primary to-secondary rounded-[60%_40%_30%_70%/60%_30%_70%_40%] blur-lg opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+          {/* Glowing backdrop layer (subtle static glow + dynamic mouse-tracking glow) */}
+          <div className="absolute -inset-2 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-[60%_40%_30%_70%/60%_30%_70%_40%] blur-md opacity-25 group-hover:opacity-40 transition-opacity duration-500"></div>
+          <div
+            className="absolute -inset-4 rounded-[60%_40%_30%_70%/60%_30%_70%_40%] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+            style={{
+              background: `radial-gradient(220px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--primary-rgb), 0.35), transparent 75%)`,
+            }}
+          />
 
           {/* Organic frame shape container */}
           <div className="relative w-full aspect-square rounded-[60%_40%_30%_70%/60%_30%_70%_40%] border border-outline-variant/50 bg-surface-container-low shadow-2xl z-0 overflow-visible">
+            {/* Border highlights following mouse */}
+            <div
+              className="absolute inset-0 rounded-[60%_40%_30%_70%/60%_30%_70%_40%] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-30"
+              style={{
+                border: "2px solid transparent",
+                backgroundImage: `linear-gradient(rgba(var(--primary-rgb), 0.1), rgba(var(--primary-rgb), 0.1)), radial-gradient(180px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--primary-rgb), 0.8), transparent 70%)`,
+                backgroundOrigin: "border-box",
+                backgroundClip: "padding-box, border-box",
+              }}
+            />
+
             {/* Base Clipped Image (within the organic container boundary) */}
             <div className="absolute inset-0 rounded-[60%_40%_30%_70%/60%_30%_70%_40%] overflow-hidden z-10">
               <Image
