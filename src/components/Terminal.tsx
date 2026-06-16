@@ -17,7 +17,7 @@ export default function Terminal() {
     { type: "output", text: "" },
   ]);
   const [input, setInput] = useState("");
-  const terminalEndRef = useRef<HTMLDivElement>(null);
+  const terminalContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const focusInput = () => {
@@ -25,7 +25,12 @@ export default function Terminal() {
   };
 
   useEffect(() => {
-    terminalEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (terminalContainerRef.current) {
+      terminalContainerRef.current.scrollTo({
+        top: terminalContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   }, [history]);
 
   const handleCommand = (cmd: string) => {
@@ -230,7 +235,10 @@ Main goal: Engineering robust solutions from bare metal to the cloud, building r
         </div>
 
         {/* Terminal Content Screen */}
-        <div className="p-5 font-mono text-sm leading-relaxed min-h-[300px] max-h-[400px] overflow-y-auto bg-surface/90 scrollbar-hide">
+        <div
+          ref={terminalContainerRef}
+          className="p-5 font-mono text-sm leading-relaxed min-h-[300px] max-h-[400px] overflow-y-auto bg-surface/90 scrollbar-hide"
+        >
           {history.map((entry, idx) => (
             <div key={idx} className="mb-2">
               {entry.type === "input" ? (
@@ -242,7 +250,6 @@ Main goal: Engineering robust solutions from bare metal to the cloud, building r
               )}
             </div>
           ))}
-          <div ref={terminalEndRef} />
         </div>
 
         {/* Terminal Input Bar */}
