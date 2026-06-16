@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Mail, Copy, Check, BadgeCheck, MessageSquare } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function CertsContact() {
   const [copiedEmail, setCopiedEmail] = useState(false);
@@ -26,9 +27,15 @@ export default function CertsContact() {
   ];
 
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 gap-12 py-12" id="certs">
+    <section className="grid grid-cols-1 md:grid-cols-2 gap-12 py-12 overflow-hidden" id="certs">
       {/* Certifications Panel */}
-      <div className="flex flex-col justify-start">
+      <motion.div
+        initial={{ opacity: 0, x: -30 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="flex flex-col justify-start"
+      >
         <div className="flex flex-col space-y-4 mb-8">
           <h2 className="font-headline-md text-3xl font-bold tracking-tight text-on-surface flex items-center gap-3">
             <BadgeCheck className="text-primary w-7 h-7" />
@@ -37,7 +44,14 @@ export default function CertsContact() {
         </div>
         <ul className="space-y-6">
           {certifications.map((cert, index) => (
-            <li key={index} className="flex items-start gap-3 group">
+            <motion.li
+              key={index}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: index * 0.15 }}
+              className="flex items-start gap-3 group"
+            >
               <span className="font-code-sm text-primary mt-1 font-bold select-none">&gt;</span>
               <div>
                 <div className="font-label-md text-base font-semibold text-on-surface group-hover:text-primary transition-colors">
@@ -47,13 +61,21 @@ export default function CertsContact() {
                   {cert.desc}
                 </div>
               </div>
-            </li>
+            </motion.li>
           ))}
         </ul>
-      </div>
+      </motion.div>
 
       {/* Sleek Initiate Connection Form Panel */}
-      <div className="rounded-xl border border-outline-variant bg-surface-container-low/50 text-on-surface shadow-sm p-6" id="contact">
+      <motion.div
+        initial={{ opacity: 0, x: 30 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        whileHover={{ y: -4 }}
+        className="rounded-xl border border-outline-variant bg-surface-container-low/50 text-on-surface shadow-sm p-6 transition-all duration-300 hover:border-primary/50"
+        id="contact"
+      >
         <div className="flex flex-col space-y-1.5 mb-4">
           <h3 className="font-headline-md text-2xl font-semibold leading-none tracking-tight text-on-surface">
             Initiate Connection
@@ -109,7 +131,7 @@ export default function CertsContact() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

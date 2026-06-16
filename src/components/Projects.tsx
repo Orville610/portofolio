@@ -63,8 +63,9 @@ export default function Projects() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: index * 0.1 }}
-            className="rounded-xl border border-outline-variant bg-surface-container-low/40 text-on-surface shadow-sm flex flex-col hover:border-primary hover-glow-primary-sm transition-all duration-300 overflow-hidden group h-full"
+            whileHover={{ y: -6, scale: 1.015 }}
+            transition={{ duration: 0.3, delay: index * 0.05 }}
+            className="rounded-xl border border-outline-variant bg-surface-container-low/40 text-on-surface shadow-sm flex flex-col hover:border-primary hover-glow-primary-sm transition-colors duration-300 overflow-hidden group h-full"
           >
             {/* Terminal Card Header */}
             <div className="px-4 py-3 border-b border-outline-variant bg-surface-container/30 flex items-center justify-between select-none">
