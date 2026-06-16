@@ -70,27 +70,6 @@ export default function Hero() {
               />
             </div>
           </div>
-
-          {/* Pop-out overlay container (clips the bottom half of the image to keep the pop-out head effect) */}
-          <div
-            className="absolute inset-0 pointer-events-none z-20"
-            style={{ clipPath: "inset(-35% 0px 50% 0px)" }}
-          >
-            <Image
-              alt=""
-              aria-hidden="true"
-              className="absolute bottom-0 w-[110%] max-w-none h-[125%] object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-500"
-              src="/profile.jpg"
-              width={576}
-              height={1024}
-              priority
-              style={{
-                left: "50%",
-                bottom: "-10%",
-                transform: "translateX(-50%) scale(1.1)",
-              }}
-            />
-          </div>
         </motion.div>
 
         {/* Bio Content Column - Appears second (bottom) on mobile, first (left) on desktop */}
