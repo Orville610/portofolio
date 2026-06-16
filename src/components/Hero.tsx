@@ -88,10 +88,10 @@ export default function Hero() {
           className="order-2 md:order-1 md:col-span-7 flex flex-col items-center md:items-start gap-6 z-30 relative -mt-16 md:mt-0 bg-background/90 md:bg-transparent backdrop-blur-md md:backdrop-blur-none p-6 sm:p-8 md:p-0 rounded-2xl md:rounded-none border border-outline-variant/50 md:border-0 shadow-2xl md:shadow-none w-[95%] md:w-full max-w-2xl md:max-w-none text-center md:text-left"
         >
           {/* Online Status Badge */}
-          <div className="inline-flex items-center rounded-full border border-outline-variant px-3 py-1 text-xs font-semibold transition-colors focus:outline-none text-on-surface-variant bg-surface-container/40 gap-2 font-code-sm">
+          <div className="inline-flex items-center rounded-full border border-emerald-500/30 px-3 py-1 text-xs font-semibold text-emerald-400 bg-emerald-950/20 gap-2 font-code-sm">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
             <span>SYS.STATUS: ONLINE</span>
           </div>
