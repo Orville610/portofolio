@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Terminal } from "lucide-react";
+import { X, Terminal } from "lucide-react";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,7 +36,7 @@ export default function Header() {
           : "border-transparent bg-transparent"
       }`}
     >
-      <div className="container flex h-16 max-w-max-width mx-auto items-center justify-between px-4 md:px-8">
+      <div className="container flex h-14 max-w-max-width mx-auto items-center justify-between px-4 md:px-8">
         {/* Logo */}
         <a
           href="#"
@@ -71,11 +71,11 @@ export default function Header() {
 
         {/* Mobile Menu Toggle */}
         <button
-          className="md:hidden flex items-center text-on-surface hover:text-primary p-2 transition-colors"
+          className="inline-flex items-center justify-center p-2 rounded-md text-on-surface-variant hover:text-primary hover:bg-surface-container focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary md:hidden"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
         >
-          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          {isOpen ? <X className="h-6 w-6" /> : <Terminal className="h-6 w-6" />}
         </button>
       </div>
 

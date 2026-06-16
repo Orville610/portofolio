@@ -1,25 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --primary-rgb: 255, 59, 48;       /* #ff3b30 */
-  --secondary-rgb: 255, 107, 90;     /* #ff6b5a */
+  --primary-rgb: 229, 9, 20;        /* True Netflix Red (#e50914) */
+  --secondary-rgb: 255, 69, 58;      /* Vibrant Orange-Red (#ff453a) */
 }
 
 @theme {
   /* MD3-inspired Theme Colors */
   --color-primary: rgb(var(--primary-rgb));
-  --color-on-primary: #4a0300;
-  --color-primary-container: #b31b1b;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #2d0c0c;
   --color-on-primary-container: #ffdad6;
   
   --color-secondary: rgb(var(--secondary-rgb));
-  --color-on-secondary: #4a0e05;
-  --color-secondary-container: #7d1b0d;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #3d1410;
   --color-on-secondary-container: #ffdcd3;
 
   --color-tertiary: #e1e2e5;
   --color-on-tertiary: #1a1c1e;
-  --color-tertiary-container: #2f3033;
+  --color-tertiary-container: #202024;
   --color-on-tertiary-container: #e1e2e5;
 
   --color-error: #ffb4ab;

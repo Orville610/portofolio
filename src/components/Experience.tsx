@@ -65,7 +65,7 @@ export default function Experience() {
               }`}
             >
               {/* Timeline marker node */}
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border border-outline-variant bg-background group-hover:border-primary shrink-0 z-10 transition-colors duration-300 absolute left-0 md:left-1/2 -translate-x-1/2">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full border border-outline-variant bg-background group-hover:border-primary shrink-0 z-10 transition-colors duration-300 absolute left-5 md:left-1/2 -translate-x-1/2">
                 {exp.icon}
               </div>
 
