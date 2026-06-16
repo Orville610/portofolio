@@ -68,6 +68,14 @@ export default function Hero() {
                 priority
                 style={{ left: "50%", bottom: "-10%", transform: "translateX(-50%) scale(1.1)" }}
               />
+              
+              {/* Dynamic Spotlight Overlay on Face */}
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20 mix-blend-screen"
+                style={{
+                  background: `radial-gradient(150px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--primary-rgb), 0.7), transparent 85%)`,
+                }}
+              />
             </div>
           </div>
         </motion.div>
