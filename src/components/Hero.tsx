@@ -84,7 +84,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="order-2 md:order-1 md:col-span-7 flex flex-col items-center md:items-start gap-6 z-30 relative -mt-16 md:mt-0 bg-background/90 md:bg-transparent backdrop-blur-md md:backdrop-blur-none p-6 sm:p-8 md:p-0 rounded-2xl md:rounded-none border border-outline-variant/50 md:border-0 shadow-2xl md:shadow-none w-[95%] md:w-full max-w-2xl md:max-w-none text-center md:text-left"
+          className="order-2 md:order-1 md:col-span-7 flex flex-col items-center md:items-start gap-6 z-30 relative -mt-8 md:mt-0 bg-background/90 md:bg-transparent backdrop-blur-md md:backdrop-blur-none p-6 sm:p-8 md:p-0 rounded-2xl md:rounded-none border border-outline-variant/50 md:border-0 shadow-2xl md:shadow-none w-[95%] md:w-full max-w-2xl md:max-w-none text-center md:text-left"
         >
           {/* Online Status Badge */}
           <div className="inline-flex items-center rounded-full border border-emerald-500/30 px-3 py-1 text-xs font-semibold text-emerald-400 bg-emerald-950/20 gap-2 font-code-sm">
