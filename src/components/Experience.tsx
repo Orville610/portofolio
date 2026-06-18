@@ -43,14 +43,11 @@ export default function Experience() {
   return (
     <section id="experience" className="py-12 relative">
       {/* Header */}
-      <div className="flex flex-col space-y-4 mb-12">
+      <div className="mb-12">
         <h2 className="font-headline-md text-3xl font-bold tracking-tight text-on-surface flex items-center gap-3">
           <Briefcase className="text-primary w-7 h-7" />
           Experience &amp; Leadership
         </h2>
-        <p className="font-body-md text-on-surface-variant text-muted-foreground max-w-xl">
-          My professional journey and community involvement.
-        </p>
       </div>
 
       {/* Timeline container */}

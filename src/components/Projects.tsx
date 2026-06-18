@@ -45,14 +45,11 @@ export default function Projects() {
   return (
     <section id="projects" className="py-12">
       {/* Header */}
-      <div className="flex flex-col space-y-4 mb-12">
+      <div className="mb-12">
         <h2 className="font-headline-md text-3xl font-bold tracking-tight text-on-surface flex items-center gap-3">
           <Terminal className="text-primary w-7 h-7" />
           Featured Projects
         </h2>
-        <p className="font-body-md text-on-surface-variant text-muted-foreground max-w-xl">
-          A selection of my recent technical endeavors. Click on files to inspect code structures.
-        </p>
       </div>
 
       {/* Grid container */}
