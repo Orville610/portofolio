@@ -33,7 +33,7 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="order-1 md:order-2 md:col-span-5 relative group w-full max-w-sm px-4 md:px-0 md:max-w-none mb-8 md:mb-0 cursor-crosshair"
+          className="order-1 md:order-2 md:col-span-5 relative group w-72 h-72 sm:w-96 sm:h-96 md:w-full md:h-auto md:aspect-square mx-auto mb-8 md:mb-0 cursor-crosshair"
         >
           {/* Glowing backdrop layer (subtle static glow + dynamic mouse-tracking glow) */}
           <div className="absolute -inset-2 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-[60%_40%_30%_70%/60%_30%_70%_40%] blur-md opacity-25 group-hover:opacity-40 transition-opacity duration-500"></div>
@@ -45,7 +45,7 @@ export default function Hero() {
           />
 
           {/* Organic frame shape container */}
-          <div className="relative w-72 h-72 sm:w-96 sm:h-96 md:w-full md:h-auto md:aspect-square mx-auto rounded-[60%_40%_30%_70%/60%_30%_70%_40%] border border-outline-variant/50 bg-surface-container-low shadow-2xl z-0 overflow-visible">
+          <div className="relative w-full h-full rounded-[60%_40%_30%_70%/60%_30%_70%_40%] border border-outline-variant/50 bg-surface-container-low shadow-2xl z-0 overflow-visible">
             {/* Border highlights following mouse */}
             <div
               className="absolute inset-0 rounded-[60%_40%_30%_70%/60%_30%_70%_40%] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-30"
