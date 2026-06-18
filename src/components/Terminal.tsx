@@ -254,7 +254,8 @@ Main goal: Engineering robust solutions from bare metal to the cloud, building r
 
         {/* Terminal Input Bar */}
         <div className="px-5 py-3 border-t border-outline-variant bg-surface-container-low/40 flex items-center gap-2">
-          <span className="text-secondary font-semibold font-mono select-none">guest@rville-cloud:~$</span>
+          <span className="text-secondary font-semibold font-mono select-none hidden sm:inline">guest@rville-cloud:~$</span>
+          <span className="text-secondary font-semibold font-mono select-none inline sm:hidden">guest:~$</span>
           <input
             ref={inputRef}
             type="text"

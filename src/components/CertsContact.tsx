@@ -91,19 +91,31 @@ export default function CertsContact() {
             <label className="font-label-md text-sm font-medium leading-none text-on-surface font-semibold" htmlFor="email">
               Email address
             </label>
-            <div className="flex items-center gap-3 w-full rounded-md border border-outline-variant bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-primary focus-within:border-primary text-on-surface-variant transition-all duration-300">
-              <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
-              <span className="font-code-sm truncate">orvillegiovanni@gmail.com</span>
-              <div className="ml-auto flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full rounded-md border border-outline-variant bg-background p-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-primary focus-within:border-primary text-on-surface-variant transition-all duration-300">
+              <div className="flex items-center gap-2 flex-grow min-w-0">
+                <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
+                <span className="font-code-sm truncate select-all">orvillegiovanni@gmail.com</span>
+              </div>
+              <div className="flex items-center justify-end gap-2 border-t border-outline-variant/30 pt-2 sm:pt-0 sm:border-0 sm:ml-auto">
                 <button
                   onClick={handleCopyEmail}
-                  className="inline-flex items-center justify-center rounded-md text-xs font-medium hover:bg-surface-container hover:text-on-surface h-8 px-2.5 transition-colors border border-transparent hover:border-outline-variant"
+                  className="inline-flex items-center justify-center rounded-md text-xs font-medium bg-surface-container-low hover:bg-surface-container hover:text-on-surface h-8 px-3 transition-colors border border-outline-variant flex-grow sm:flex-grow-0"
                   title="Copy Email"
                 >
-                  {copiedEmail ? <Check className="w-4 h-4 text-secondary" /> : <Copy className="w-4 h-4" />}
+                  {copiedEmail ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-secondary mr-1.5" />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5 mr-1.5" />
+                      Copy
+                    </>
+                  )}
                 </button>
                 <a
-                  className="inline-flex items-center justify-center rounded-md text-xs font-medium hover:bg-surface-container hover:text-on-surface h-8 px-3 transition-colors"
+                  className="inline-flex items-center justify-center rounded-md text-xs font-medium bg-primary text-on-primary hover:bg-primary/90 h-8 px-3 transition-colors flex-grow sm:flex-grow-0"
                   href="mailto:orvillegiovanni@gmail.com"
                 >
                   Send Email
@@ -117,17 +129,21 @@ export default function CertsContact() {
             <label className="font-label-md text-sm font-medium leading-none text-on-surface font-semibold" htmlFor="whatsapp">
               WhatsApp
             </label>
-            <div className="flex items-center gap-3 w-full rounded-md border border-outline-variant bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-primary focus-within:border-primary text-on-surface-variant transition-all duration-300">
-              <MessageSquare className="w-4 h-4 text-muted-foreground shrink-0" />
-              <span className="font-code-sm truncate">Direct Message</span>
-              <a
-                className="ml-auto inline-flex items-center justify-center rounded-md text-xs font-medium hover:bg-surface-container hover:text-on-surface h-8 px-3 transition-colors border border-transparent hover:border-outline-variant"
-                href="https://wa.me/6281234567890"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Message
-              </a>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full rounded-md border border-outline-variant bg-background p-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-primary focus-within:border-primary text-on-surface-variant transition-all duration-300">
+              <div className="flex items-center gap-2 flex-grow min-w-0">
+                <MessageSquare className="w-4 h-4 text-muted-foreground shrink-0" />
+                <span className="font-code-sm truncate">Direct Message</span>
+              </div>
+              <div className="flex items-center justify-end gap-2 border-t border-outline-variant/30 pt-2 sm:pt-0 sm:border-0 sm:ml-auto">
+                <a
+                  className="inline-flex items-center justify-center rounded-md text-xs font-medium bg-primary text-on-primary hover:bg-primary/90 h-8 px-4 transition-colors flex-grow sm:flex-grow-0"
+                  href="https://wa.me/6281234567890"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Message
+                </a>
+              </div>
             </div>
           </div>
         </div>
