@@ -33,6 +33,8 @@ export const metadata: Metadata = {
   authors: [{ name: "Orville Giovanni Sambono" }],
 };
 
+import PWARegister from "@/components/PWARegister";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -48,10 +50,16 @@ export default function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin=""
         />
+        {/* PWA Manifest and Theme Color */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#0f0f11" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} bg-background text-on-surface font-body-md antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col`}
       >
+        <PWARegister />
         {children}
         <SpeedInsights />
       </body>

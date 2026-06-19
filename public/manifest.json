@@ -1,0 +1,17 @@
+{
+  "name": "Orville Giovanni Sambono Portfolio",
+  "short_name": "Orville Portfolio",
+  "description": "Portfolio of Orville Giovanni Sambono, a Software Engineer & Linux & Cloud Enthusiast.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f0f11",
+  "theme_color": "#0f0f11",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/file.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
