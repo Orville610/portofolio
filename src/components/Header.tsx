@@ -42,7 +42,17 @@ export default function Header() {
           href="#"
           className="font-headline-md text-xl font-bold text-on-surface tracking-tight flex items-center space-x-2 group"
         >
-          <Terminal className="h-5 w-5 text-primary group-hover:rotate-12 transition-transform duration-300" />
+          <svg className="h-7 w-7 text-primary group-hover:scale-105 transition-transform duration-300" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100" height="100" rx="22" fill="currentColor" className="text-primary-container/30 group-hover:text-primary-container/50 transition-colors" />
+            <g stroke-linecap="round" stroke-linejoin="round" fill="none">
+              <path d="M 22 33 L 38 49 L 22 65" stroke="currentColor" strokeWidth="9" />
+              <path d="M 48 35 L 48 65" stroke="currentColor" strokeWidth="9" />
+              <path d="M 48 35 H 60 C 66 35 66 47 60 47 H 48" stroke="currentColor" strokeWidth="9" />
+              <path d="M 57 47 L 64 65" stroke="currentColor" strokeWidth="9" />
+              <path d="M 69 35 L 76 65 L 83 35" stroke="currentColor" className="text-secondary" strokeWidth="9" />
+              <path d="M 76 73 H 88" stroke="currentColor" strokeWidth="9" />
+            </g>
+          </svg>
           <span className="text-primary font-bold">Rville</span>
         </a>
 
