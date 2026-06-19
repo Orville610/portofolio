@@ -10,7 +10,7 @@ export default function CertsContact() {
   const handleCopyEmail = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    navigator.clipboard.writeText("orvillegiovanni@gmail.com");
+    navigator.clipboard.writeText("orville@rville.site");
     setCopiedEmail(true);
     setTimeout(() => setCopiedEmail(false), 2000);
   };
@@ -94,7 +94,7 @@ export default function CertsContact() {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full rounded-md border border-outline-variant bg-background p-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-primary focus-within:border-primary text-on-surface-variant transition-all duration-300">
               <div className="flex items-center gap-2 flex-grow min-w-0">
                 <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
-                <span className="font-code-sm truncate select-all">orvillegiovanni@gmail.com</span>
+                <span className="font-code-sm truncate select-all">orville@rville.site</span>
               </div>
               <div className="flex items-center justify-end gap-2 border-t border-outline-variant/30 pt-2 sm:pt-0 sm:border-0 sm:ml-auto">
                 <button
@@ -116,7 +116,7 @@ export default function CertsContact() {
                 </button>
                 <a
                   className="inline-flex items-center justify-center rounded-md text-xs font-medium bg-primary text-on-primary hover:bg-primary/90 h-8 px-3 transition-colors flex-grow sm:flex-grow-0"
-                  href="mailto:orvillegiovanni@gmail.com"
+                  href="mailto:orville@rville.site"
                 >
                   Send Email
                 </a>
@@ -124,7 +124,7 @@ export default function CertsContact() {
             </div>
           </div>
 
-          {/* WhatsApp Row */}
+          {/* WhatsApp Row (Temporarily Hidden)
           <div className="grid gap-2">
             <label className="font-label-md text-sm font-medium leading-none text-on-surface font-semibold" htmlFor="whatsapp">
               WhatsApp
@@ -146,6 +146,7 @@ export default function CertsContact() {
               </div>
             </div>
           </div>
+          */}
         </div>
       </motion.div>
     </section>

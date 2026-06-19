@@ -133,10 +133,9 @@ Main goal: Engineering robust solutions from bare metal to the cloud, building r
           {
             type: "output",
             text: `Connection Details:
-- Email    : orvillegiovanni@gmail.com
+- Email    : orville@rville.site
 - Github   : github.com/Orville610
-- Instagram: instagram.com/heyy.orville
-- Whatsapp : Direct message button below`,
+- Instagram: instagram.com/heyy.orville`,
           },
         ];
         break;
