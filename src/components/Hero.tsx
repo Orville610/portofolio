@@ -1,12 +1,29 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FolderOpen, Mail } from "lucide-react";
 import Image from "next/image";
 
 export default function Hero() {
   const photoContainerRef = useRef<HTMLDivElement>(null);
+  const [isOnline, setIsOnline] = useState(true);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsOnline(window.navigator.onLine);
+      const handleOnline = () => setIsOnline(true);
+      const handleOffline = () => setIsOnline(false);
+
+      window.addEventListener("online", handleOnline);
+      window.addEventListener("offline", handleOffline);
+
+      return () => {
+        window.removeEventListener("online", handleOnline);
+        window.removeEventListener("offline", handleOffline);
+      };
+    }
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!photoContainerRef.current) return;
@@ -87,12 +104,20 @@ export default function Hero() {
           className="order-2 md:order-1 md:col-span-7 flex flex-col items-center md:items-start gap-6 z-30 relative -mt-8 md:mt-0 bg-background/90 md:bg-transparent backdrop-blur-md md:backdrop-blur-none p-6 sm:p-8 md:p-0 rounded-2xl md:rounded-none border border-outline-variant/50 md:border-0 shadow-2xl md:shadow-none w-[95%] md:w-full max-w-2xl md:max-w-none text-center md:text-left"
         >
           {/* Online Status Badge */}
-          <div className="inline-flex items-center rounded-full border border-emerald-500/30 px-3 py-1 text-xs font-semibold text-emerald-400 bg-emerald-950/20 gap-2 font-code-sm">
+          <div className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold gap-2 font-code-sm transition-all duration-300 ${
+            isOnline 
+              ? "border-emerald-500/30 text-emerald-400 bg-emerald-950/20" 
+              : "border-red-500/30 text-red-400 bg-red-950/20"
+          }`}>
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                isOnline ? "bg-emerald-400" : "bg-red-400"
+              }`}></span>
+              <span className={`relative inline-flex rounded-full h-2 w-2 ${
+                isOnline ? "bg-emerald-500" : "bg-red-500"
+              }`}></span>
             </span>
-            <span>SYS.STATUS: ONLINE</span>
+            <span>SYS.STATUS: {isOnline ? "ONLINE" : "OFFLINE"}</span>
           </div>
 
           {/* Hero Name / Header */}
