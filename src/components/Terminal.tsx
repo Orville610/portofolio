@@ -23,7 +23,10 @@ export default function Terminal() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const focusInput = () => {
-    inputRef.current?.focus();
+    // Only focus if the user is not actively selecting text to allow copy-pasting
+    if (!window.getSelection()?.toString()) {
+      inputRef.current?.focus();
+    }
   };
 
   useEffect(() => {

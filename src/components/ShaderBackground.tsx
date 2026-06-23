@@ -181,10 +181,13 @@ export default function ShaderBackground() {
     const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
     const handleMouseMove = (event: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      if (rect.width && rect.height) {
-        const nx = (event.clientX - rect.left) / rect.width;
-        const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      // Avoid calling getBoundingClientRect() which triggers forced reflows.
+      // Since the canvas is fixed-positioned and spans the entire viewport, we can use window dimensions directly.
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      if (w && h) {
+        const nx = event.clientX / w;
+        const ny = 1.0 - (event.clientY / h);
         mouse.x = nx * canvas.width;
         mouse.y = ny * canvas.height;
       }

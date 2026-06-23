@@ -30,6 +30,26 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: securityHeaders,
       },
+      {
+        // Cache static files (e.g. images, SVGs, etc.) for 1 year in the browser
+        source: "/:file(profile.webp|globe.svg|window.svg|vercel.svg|next.svg|file.svg)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        // Force revalidation for PWA assets, manifest, and service worker instantly
+        source: "/:file(manifest.json|sw.js|icon.png|icon.svg)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=0, must-revalidate",
+          },
+        ],
+      },
     ];
   },
 };

@@ -25,9 +25,21 @@ export default function Hero() {
     }
   }, []);
 
+  const rectRef = useRef<DOMRect | null>(null);
+
+  const handleMouseEnter = () => {
+    if (photoContainerRef.current) {
+      rectRef.current = photoContainerRef.current.getBoundingClientRect();
+    }
+  };
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!photoContainerRef.current) return;
-    const rect = photoContainerRef.current.getBoundingClientRect();
+    let rect = rectRef.current;
+    if (!rect && photoContainerRef.current) {
+      rect = photoContainerRef.current.getBoundingClientRect();
+      rectRef.current = rect;
+    }
+    if (!rect || !photoContainerRef.current) return;
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     photoContainerRef.current.style.setProperty("--mouse-x", `${x}px`);
@@ -46,6 +58,7 @@ export default function Hero() {
         {/* Photo Column - Appears first (top) on mobile, second (right) on desktop */}
         <motion.div
           ref={photoContainerRef}
+          onMouseEnter={handleMouseEnter}
           onMouseMove={handleMouseMove}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}

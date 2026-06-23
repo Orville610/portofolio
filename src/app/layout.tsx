@@ -70,6 +70,16 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://rville.site",
   },
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+  },
+};
+
+export const viewport = {
+  themeColor: "#0f0f11",
+  colorScheme: "dark" as const,
 };
 
 import PWARegister from "@/components/PWARegister";
@@ -83,12 +93,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark scroll-smooth">
       <head>
-        {/* PWA Manifest and Theme Color */}
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#0f0f11" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
         {/* JSON-LD Schema.org Structured Data */}
         <script
           type="application/ld+json"
