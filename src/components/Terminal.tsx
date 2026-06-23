@@ -227,6 +227,8 @@ Main goal: Engineering robust solutions from bare metal to the cloud, building r
           <button
             onClick={() => handleCommand("neofetch")}
             className="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 text-xs font-code-sm"
+            aria-label="Run neofetch profile summary command"
+            title="Run neofetch"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             neofetch
@@ -272,6 +274,7 @@ Main goal: Engineering robust solutions from bare metal to the cloud, building r
             onClick={() => handleCommand(input)}
             className="text-on-surface-variant hover:text-primary transition-colors p-1"
             title="Run command"
+            aria-label="Run command"
           >
             <Play className="w-4 h-4" />
           </button>

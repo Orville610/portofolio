@@ -9,6 +9,7 @@ import Experience from "@/components/Experience";
 import Projects from "@/components/Projects";
 import CertsContact from "@/components/CertsContact";
 import Footer from "@/components/Footer";
+import BootWrapper from "@/components/BootWrapper";
 
 export default function Home() {
   return (
@@ -21,26 +22,28 @@ export default function Home() {
       
       {/* Main Container */}
       <main className="container max-w-max-width mx-auto px-4 md:px-8 py-10 md:py-20 space-y-24 flex-grow">
-        {/* Intro Hero banner */}
-        <Hero />
+        <BootWrapper>
+          {/* Intro Hero banner */}
+          <Hero />
 
-        {/* Continuous Tech Stack Marquee */}
-        <Marquee />
+          {/* Continuous Tech Stack Marquee */}
+          <Marquee />
 
-        {/* Interactive Terminal CLI Emulator */}
-        <Terminal />
+          {/* Interactive Terminal CLI Emulator */}
+          <Terminal />
 
-        {/* Highlighted Cloud Computing Achievement */}
-        <Achievement />
+          {/* Highlighted Cloud Computing Achievement */}
+          <Achievement />
 
-        {/* Work & Community Experience Timeline */}
-        <Experience />
+          {/* Work & Community Experience Timeline */}
+          <Experience />
 
-        {/* Project Showcases */}
-        <Projects />
+          {/* Project Showcases */}
+          <Projects />
 
-        {/* Credentials, Certs & Connect Form */}
-        <CertsContact />
+          {/* Credentials, Certs & Connect Form */}
+          <CertsContact />
+        </BootWrapper>
       </main>
 
       {/* Global Footer */}

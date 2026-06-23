@@ -187,3 +187,10 @@ body {
 html {
   scroll-behavior: smooth;
 }
+
+/* Hide phantom-ui component until registered to avoid content flash */
+phantom-ui:not(:defined) {
+  opacity: 0;
+  display: block;
+}
+

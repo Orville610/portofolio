@@ -16,21 +16,60 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Orville Giovanni Sambono | Portfolio",
+  title: "Orville Giovanni Sambono | Software Engineer & Linux/Cloud Specialist",
   description:
-    "Portfolio of Orville Giovanni Sambono, a Software Engineer & Linux & Cloud Enthusiast. Engineering robust solutions from bare metal to the cloud, self-hosted environments, and distributed networking.",
+    "Portfolio of Orville Giovanni Sambono, a Software Engineer & Linux & Cloud Enthusiast in Makassar. Specialized in docker deployments, network engineering (Tailscale, zero-trust), and robust cloud/bare-metal infrastructure solutions.",
   keywords: [
     "Orville Giovanni Sambono",
-    "Software Engineer",
-    "Cloud Computing",
-    "Linux Enthusiast",
-    "Makassar Developer",
-    "Self-Hosted",
-    "Tailscale",
-    "Docker",
-    "Armbian",
+    "Software Engineer Portfolio",
+    "Cloud Computing Engineer",
+    "Linux Administration",
+    "Self-Hosted Homelab",
+    "Tailscale Zero Trust Network",
+    "Docker Containerization",
+    "Armbian Linux Developer",
+    "Makassar Web Developer",
+    "Orville Rville Portfolio",
   ],
-  authors: [{ name: "Orville Giovanni Sambono" }],
+  authors: [{ name: "Orville Giovanni Sambono", url: "https://rville.site" }],
+  creator: "Orville Giovanni Sambono",
+  publisher: "Orville Giovanni Sambono",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://rville.site",
+    title: "Orville Giovanni Sambono | Software Engineer & Linux/Cloud Specialist",
+    description: "Engineering robust solutions from bare metal to the cloud, self-hosted environments, and distributed networking.",
+    siteName: "Orville Giovanni Sambono Portfolio",
+    images: [
+      {
+        url: "https://rville.site/profile.jpg",
+        width: 800,
+        height: 800,
+        alt: "Orville Giovanni Sambono Portfolio Profile Picture",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Orville Giovanni Sambono | Software & Network Engineer",
+    description: "Engineering robust solutions from bare metal to the cloud, self-hosted environments, and distributed networking.",
+    images: ["https://rville.site/profile.jpg"],
+  },
+  alternates: {
+    canonical: "https://rville.site",
+  },
 };
 
 import PWARegister from "@/components/PWARegister";

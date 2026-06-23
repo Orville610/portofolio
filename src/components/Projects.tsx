@@ -83,6 +83,7 @@ export default function Projects() {
                     href={project.githubUrl}
                     className="text-on-surface-variant hover:text-primary transition-colors duration-200"
                     title="View GitHub Repository"
+                    aria-label={`View GitHub repository for ${project.title}`}
                   >
                     <svg
                       className="w-4 h-4"
@@ -103,6 +104,7 @@ export default function Projects() {
                     href={project.liveUrl}
                     className="text-on-surface-variant hover:text-secondary transition-colors duration-200"
                     title="View Live Demo"
+                    aria-label={`View live demo for ${project.title}`}
                   >
                     <ExternalLink className="w-4 h-4" />
                   </a>

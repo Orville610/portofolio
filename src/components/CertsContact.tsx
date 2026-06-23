@@ -54,12 +54,12 @@ export default function CertsContact() {
             >
               <span className="font-code-sm text-primary mt-1 font-bold select-none">&gt;</span>
               <div>
-                <div className="font-label-md text-base font-semibold text-on-surface group-hover:text-primary transition-colors">
+                <h3 className="font-label-md text-base font-semibold text-on-surface group-hover:text-primary transition-colors">
                   {cert.title}
-                </div>
-                <div className="font-body-md text-sm text-on-surface-variant text-muted-foreground mt-1 leading-relaxed">
+                </h3>
+                <p className="font-body-md text-sm text-on-surface-variant text-muted-foreground mt-1 leading-relaxed">
                   {cert.desc}
-                </div>
+                </p>
               </div>
             </motion.li>
           ))}
@@ -77,9 +77,9 @@ export default function CertsContact() {
         id="contact"
       >
         <div className="flex flex-col space-y-1.5 mb-4">
-          <h3 className="font-headline-md text-2xl font-semibold leading-none tracking-tight text-on-surface">
+          <h2 className="font-headline-md text-2xl font-semibold leading-none tracking-tight text-on-surface">
             Initiate Connection
-          </h3>
+          </h2>
           <p className="font-body-md text-sm text-on-surface-variant text-muted-foreground leading-relaxed">
             Looking to collaborate on infrastructure projects or discuss self-hosting solutions? Ping me.
           </p>

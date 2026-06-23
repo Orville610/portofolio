@@ -77,7 +77,7 @@ export default function Hero() {
             {/* Base Clipped Image (within the organic container boundary) */}
             <div className="absolute inset-0 rounded-[60%_40%_30%_70%/60%_30%_70%_40%] overflow-hidden z-10">
               <Image
-                alt="Orville Giovanni Sambono"
+                alt="Orville Giovanni Sambono - Software Engineer Portfolio Profile Picture"
                 className="absolute inset-0 w-full h-full object-cover object-[center_15%] grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105"
                 src="/profile.webp"
                 width={576}

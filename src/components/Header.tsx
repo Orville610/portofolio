@@ -79,7 +79,8 @@ export default function Header() {
         <button
           className="inline-flex items-center justify-center p-2 rounded-md text-on-surface-variant hover:text-primary hover:bg-surface-container focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary md:hidden"
           onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle menu"
+          aria-label={isOpen ? "Close main navigation menu" : "Open main navigation menu"}
+          title={isOpen ? "Close Menu" : "Open Menu"}
         >
           {isOpen ? <X className="h-6 w-6" /> : <Terminal className="h-6 w-6" />}
         </button>
