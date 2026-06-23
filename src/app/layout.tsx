@@ -94,6 +94,53 @@ export default function RootLayout({
         <meta name="theme-color" content="#0f0f11" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        {/* JSON-LD Schema.org Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              "name": "Orville Giovanni Sambono",
+              "url": "https://rville.site",
+              "image": "https://rville.site/profile.jpg",
+              "sameAs": [
+                "https://github.com/Orville610",
+                "https://www.linkedin.com/in/orvillegiovanni/",
+                "https://instagram.com/heyy.orville"
+              ],
+              "jobTitle": "Software Engineer",
+              "worksFor": {
+                "@type": "Organization",
+                "name": "Self-Employed"
+              },
+              "description": "Portfolio of Orville Giovanni Sambono, a Software Engineer & Linux & Cloud Enthusiast. Engineering robust solutions from bare metal to the cloud, self-hosted environments, and distributed networking.",
+              "gender": "Male",
+              "nationality": "Indonesian",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Makassar",
+                "addressRegion": "South Sulawesi",
+                "addressCountry": "ID"
+              },
+              "knowsAbout": [
+                "Software Engineering",
+                "Docker",
+                "Linux Administration",
+                "Cloud Computing",
+                "Tailscale Zero Trust Networking",
+                "Armbian Homelab",
+                "MariaDB",
+                "PHP",
+                "Next.js",
+                "React",
+                "TypeScript",
+                "Web Development"
+              ]
+            })
+          }}
+        />
       </head>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} bg-background text-on-surface font-body-md antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col`}
