@@ -17,6 +17,8 @@ export default function Terminal() {
     { type: "output", text: "" },
   ]);
   const [input, setInput] = useState("");
+  const [commandHistory, setCommandHistory] = useState<string[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
   const terminalContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -200,6 +202,16 @@ Main goal: Engineering robust solutions from bare metal to the cloud, building r
         break;
     }
 
+    if (cmd.trim()) {
+      setCommandHistory((prev) => {
+        // Prevent duplicate consecutive entries in history
+        if (prev.length > 0 && prev[prev.length - 1] === cmd) {
+          return prev;
+        }
+        return [...prev, cmd];
+      });
+    }
+    setHistoryIndex(-1); // Reset index
     setHistory([...newHistory, ...output]);
     setInput("");
   };
@@ -207,6 +219,43 @@ Main goal: Engineering robust solutions from bare metal to the cloud, building r
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleCommand(input);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (commandHistory.length === 0) return;
+      const newIndex = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1);
+      setHistoryIndex(newIndex);
+      setInput(commandHistory[newIndex]);
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (historyIndex === -1) return;
+      if (historyIndex === commandHistory.length - 1) {
+        setHistoryIndex(-1);
+        setInput("");
+      } else {
+        const newIndex = historyIndex + 1;
+        setHistoryIndex(newIndex);
+        setInput(commandHistory[newIndex]);
+      }
+    } else if (e.key === "Tab") {
+      e.preventDefault();
+      const currentInput = input.trim().toLowerCase();
+      if (!currentInput) return;
+      const availableCommands = [
+        "help",
+        "about",
+        "skills",
+        "experience",
+        "projects",
+        "certs",
+        "contact",
+        "neofetch",
+        "confetti",
+        "clear"
+      ];
+      const match = availableCommands.find((c) => c.startsWith(currentInput));
+      if (match) {
+        setInput(match);
+      }
     }
   };
 
