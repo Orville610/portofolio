@@ -24,7 +24,21 @@ export default function BootWrapper({ children }: { children: React.ReactNode })
       setIsLoading(false);
     }, 1200);
 
-    return () => clearTimeout(timer);
+    const originalTitle = document.title;
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        document.title = "💤 SYS.STATUS: SLEEP";
+      } else {
+        document.title = originalTitle;
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
   return (

@@ -60,6 +60,9 @@ export default function Terminal() {
   contact     - Display contact methods
   neofetch    - Show system details & ASCII art
   confetti    - Fire a celebration rocket!
+  sudo        - Request superuser privileges
+  weather     - Check local weather in Makassar
+  matrix      - Establish connection to the Matrix
   clear       - Clear the screen`,
           },
         ];
@@ -183,6 +186,33 @@ Main goal: Engineering robust solutions from bare metal to the cloud, building r
           {
             type: "output",
             text: "🎉 System Celebration Executed! Launching confetti...",
+          },
+        ];
+        break;
+
+      case "sudo":
+        output = [
+          {
+            type: "output",
+            text: "Permission denied. Guest user is not in the sudoers file. This incident will be reported.",
+          },
+        ];
+        break;
+
+      case "weather":
+        output = [
+          {
+            type: "output",
+            text: "Location: Makassar, Indonesia\nWeather : 31°C - Partly Cloudy\nWind    : 12 km/h E\nHumidity: 70%\nNotice  : Perfect temperature for self-hosting on bare-metal! ⚡",
+          },
+        ];
+        break;
+
+      case "matrix":
+        output = [
+          {
+            type: "output",
+            text: "Establishing connection to the Matrix...\n101001101011010010101101001010100101101\n011010010110100101011011010110100101010\n101011010110100101011011010010100101101\n011011010110100101011010010101001011010\n101011010110100101011010010100100101101\n\nSystem: Wake up, Neo...",
           },
         ];
         break;
