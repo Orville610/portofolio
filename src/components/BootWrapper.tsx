@@ -20,6 +20,20 @@ export default function BootWrapper({ children }: { children: React.ReactNode })
       console.error("Failed to load phantom-ui:", err);
     });
 
+    // Print styled console greeting for developers
+    console.log(
+      "%c>_ Welcome to Orville's Portfolio!",
+      "color: #e50914; font-size: 16px; font-weight: bold; font-family: monospace;"
+    );
+    console.log(
+      "%cSYS.STATUS: ONLINE | Cloud & Linux Enthusiast",
+      "color: #4edea3; font-size: 12px; font-family: monospace;"
+    );
+    console.log(
+      "%cType 'help' in the website terminal for interactive commands.",
+      "color: #8e9099; font-size: 12px; font-family: monospace;"
+    );
+
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1200);

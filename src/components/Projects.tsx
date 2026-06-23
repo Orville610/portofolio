@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink, Folder, Terminal } from "lucide-react";
 
@@ -11,9 +11,13 @@ interface ProjectItem {
   tags: string[];
   githubUrl?: string;
   liveUrl?: string;
+  category: "Docker" | "Networking" | "Web Dev";
 }
 
 export default function Projects() {
+  const [activeCategory, setActiveCategory] = useState("All");
+  const categories = ["All", "Docker", "Networking", "Web Dev"];
+
   const projects: ProjectItem[] = [
     {
       filename: "infra.sh",
@@ -22,6 +26,7 @@ export default function Projects() {
         "Designed and deployed a robust home-lab environment utilizing Docker and CasaOS on Armbian Linux. Implemented Nextcloud for secure, private data storage and sync across devices.",
       tags: ["Docker", "CasaOS", "Armbian"],
       githubUrl: "#",
+      category: "Docker",
     },
     {
       filename: "network.conf",
@@ -30,6 +35,7 @@ export default function Projects() {
         "Engineered a secure, zero-trust mesh network using Tailscale to link geographically distributed MariaDB instances, ensuring high availability and encrypted internal traffic without exposing ports.",
       tags: ["Tailscale", "MariaDB", "ZeroTier"],
       githubUrl: "#",
+      category: "Networking",
     },
     {
       filename: "index.php",
@@ -39,29 +45,53 @@ export default function Projects() {
       tags: ["PHP", "HTML/CSS", "UI/UX"],
       githubUrl: "#",
       liveUrl: "#",
+      category: "Web Dev",
     },
   ];
 
+  const filteredProjects = activeCategory === "All"
+    ? projects
+    : projects.filter((p) => p.category === activeCategory);
+
   return (
     <section id="projects" className="py-12">
-      {/* Header */}
-      <div className="mb-12">
+      {/* Header with Filters */}
+      <div className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <h2 className="font-headline-md text-3xl font-bold tracking-tight text-on-surface flex items-center gap-3">
           <Terminal className="text-primary w-7 h-7" />
           Featured Projects
         </h2>
+
+        {/* Category Filters */}
+        <div className="flex flex-wrap gap-2.5">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold font-code-sm border transition-all duration-300 cursor-pointer ${
+                activeCategory === category
+                  ? "bg-primary text-on-primary border-primary hover:bg-primary/90"
+                  : "bg-surface-container/20 text-on-surface-variant border-outline-variant/60 hover:border-primary/50 hover:text-primary"
+              }`}
+              aria-label={`Filter projects by ${category}`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Grid container */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((project, index) => (
+      <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredProjects.map((project, index) => (
           <motion.div
-            key={index}
+            layout
+            key={project.title}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             whileHover={{ y: -6, scale: 1.015 }}
-            transition={{ duration: 0.3, delay: index * 0.05 }}
+            transition={{ duration: 0.3 }}
             className="rounded-xl border border-outline-variant bg-surface-container-low/40 text-on-surface shadow-sm flex flex-col hover:border-primary hover-glow-primary-sm transition-colors duration-300 overflow-hidden group h-full"
           >
             {/* Terminal Card Header */}
@@ -135,7 +165,7 @@ export default function Projects() {
             </div>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -63,6 +63,7 @@ export default function Terminal() {
   sudo        - Request superuser privileges
   weather     - Check local weather in Makassar
   matrix      - Establish connection to the Matrix
+  speedtest   - Run simulated connection speed test
   clear       - Clear the screen`,
           },
         ];
@@ -217,6 +218,53 @@ Main goal: Engineering robust solutions from bare metal to the cloud, building r
         ];
         break;
 
+      case "speedtest":
+        // Run simulated multi-step speedtest
+        setHistory(newHistory);
+        const speedtestLog = [
+          { type: "output" as const, text: "Testing connection speed to rville-cloud-node-01 (Makassar, ID)..." }
+        ];
+        setHistory((prev) => [...prev, ...speedtestLog]);
+
+        const runTest = (step: number) => {
+          setTimeout(() => {
+            if (step === 1) {
+              setHistory((prev) => [...prev, { type: "output" as const, text: "Connecting to server... Done (Latency: 4ms)" }]);
+              runTest(2);
+            } else if (step === 2) {
+              setHistory((prev) => [...prev, { type: "output" as const, text: "Testing download: [==========          ] 50% (450 Mbps)" }]);
+              runTest(3);
+            } else if (step === 3) {
+              setHistory((prev) => [...prev, { type: "output" as const, text: "Testing download: [====================] 100% (945 Mbps)" }]);
+              runTest(4);
+            } else if (step === 4) {
+              setHistory((prev) => [...prev, { type: "output" as const, text: "Testing upload  : [==========          ] 50% (210 Mbps)" }]);
+              runTest(5);
+            } else if (step === 5) {
+              setHistory((prev) => [
+                ...prev,
+                { type: "output" as const, text: "Testing upload  : [====================] 100% (480 Mbps)" },
+                {
+                  type: "output" as const,
+                  text: "\nSpeedtest completed successfully!\n---------------------------------\nDownload: 945 Mbps\nUpload  : 480 Mbps\nLatency : 4 ms (Stable Tailscale Zero-Trust Link) ⚡"
+                }
+              ]);
+            }
+          }, 450);
+        };
+        
+        runTest(1);
+        
+        if (cmd.trim()) {
+          setCommandHistory((prev) => {
+            if (prev.length > 0 && prev[prev.length - 1] === cmd) return prev;
+            return [...prev, cmd];
+          });
+        }
+        setHistoryIndex(-1);
+        setInput("");
+        return;
+
       case "clear":
         setHistory([]);
         setInput("");
@@ -280,6 +328,10 @@ Main goal: Engineering robust solutions from bare metal to the cloud, building r
         "contact",
         "neofetch",
         "confetti",
+        "sudo",
+        "weather",
+        "matrix",
+        "speedtest",
         "clear"
       ];
       const match = availableCommands.find((c) => c.startsWith(currentInput));
