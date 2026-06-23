@@ -73,6 +73,7 @@ export const metadata: Metadata = {
 };
 
 import PWARegister from "@/components/PWARegister";
+import { Analytics } from "@vercel/analytics/react";
 
 export default function RootLayout({
   children,
@@ -82,13 +83,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark scroll-smooth">
       <head>
-        {/* Preconnect links to speed up font loading */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin=""
-        />
         {/* PWA Manifest and Theme Color */}
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#0f0f11" />
@@ -148,6 +142,7 @@ export default function RootLayout({
         <PWARegister />
         {children}
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
