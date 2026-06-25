@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Terminal as TerminalIcon, Play, RefreshCw } from "lucide-react";
 import confetti from "canvas-confetti";
+import { usePortfolio } from "@/context/PortfolioContext";
 
 interface LogEntry {
   type: "input" | "output";
@@ -11,6 +12,8 @@ interface LogEntry {
 }
 
 export default function Terminal() {
+  const { setIsAdmin, setShowAdminPanel } = usePortfolio();
+  const [isPromptingPassword, setIsPromptingPassword] = useState(false);
   const [history, setHistory] = useState<LogEntry[]>([
     { type: "output", text: "Welcome to Rville Cloud Terminal v1.0.0" },
     { type: "output", text: "Type 'help' to see list of available commands." },
@@ -38,7 +41,58 @@ export default function Terminal() {
     }
   }, [history]);
 
+  const verifyPassword = async (pwd: string) => {
+    // Show masked input (dots) to mock typing
+    setHistory((prev) => [
+      ...prev,
+      { type: "input", text: "guest@rville-cloud:~$ " + "•".repeat(Math.max(1, pwd.length)) }
+    ]);
+
+    try {
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password: pwd }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setHistory((prev) => [
+          ...prev,
+          { 
+            type: "output", 
+            text: "Access Granted. Initializing admin context...\nSuccessfully logged in! Opening Admin Panel..." 
+          }
+        ]);
+        setIsAdmin(true);
+        setTimeout(() => {
+          setShowAdminPanel(true);
+        }, 500);
+      } else {
+        setHistory((prev) => [
+          ...prev,
+          { type: "output", text: "sudo: 1 incorrect password attempt. Access denied." }
+        ]);
+      }
+    } catch (err) {
+      setHistory((prev) => [
+        ...prev,
+        { type: "output", text: "sudo: authentication service error." }
+      ]);
+    }
+
+    setIsPromptingPassword(false);
+    setInput("");
+  };
+
   const handleCommand = (cmd: string) => {
+    if (isPromptingPassword) {
+      verifyPassword(cmd);
+      return;
+    }
     const trimmedCmd = cmd.trim().toLowerCase();
     const newHistory = [...history, { type: "input" as const, text: `guest@rville-cloud:~$ ${cmd}` }];
 
@@ -195,13 +249,11 @@ Main goal: Engineering robust solutions from bare metal to the cloud, building r
         break;
 
       case "sudo":
-        output = [
-          {
-            type: "output",
-            text: "Permission denied. Guest user is not in the sudoers file. This incident will be reported.",
-          },
-        ];
-        break;
+      case "sudo su":
+        setHistory([...newHistory, { type: "output", text: "[sudo] password for guest: " }]);
+        setIsPromptingPassword(true);
+        setInput("");
+        return;
 
       case "weather":
         output = [
@@ -393,7 +445,7 @@ Main goal: Engineering robust solutions from bare metal to the cloud, building r
           <span className="text-secondary font-semibold font-mono select-none inline sm:hidden">guest:~$</span>
           <input
             ref={inputRef}
-            type="text"
+            type={isPromptingPassword ? "password" : "text"}
             className="flex-grow bg-transparent border-none outline-none focus:ring-0 p-0 text-primary font-mono text-sm caret-primary"
             value={input}
             onChange={(e) => setInput(e.target.value)}

@@ -1,22 +1,11 @@
 "use client";
 
 import React from "react";
+import { usePortfolio } from "@/context/PortfolioContext";
 
 export default function Marquee() {
-  const skills = [
-    "Linux (Armbian)",
-    "Docker",
-    "Nextcloud",
-    "Tailscale",
-    "ZeroTier",
-    "UI/UX Design",
-    "AI Prompting",
-    "HTML/CSS/PHP",
-    "Next.js",
-    "TypeScript",
-    "React",
-    "Tailwind CSS",
-  ];
+  const { portfolioData } = usePortfolio();
+  const { skills } = portfolioData;
 
   return (
     <section className="border-y border-outline-variant py-4 bg-transparent overflow-hidden relative w-full my-6">

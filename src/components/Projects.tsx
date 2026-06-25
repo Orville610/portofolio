@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink, Folder, Terminal } from "lucide-react";
 
+import { usePortfolio } from "@/context/PortfolioContext";
+
 interface ProjectItem {
   filename: string;
   title: string;
@@ -11,43 +13,14 @@ interface ProjectItem {
   tags: string[];
   githubUrl?: string;
   liveUrl?: string;
-  category: "Docker" | "Networking" | "Web Dev";
+  category: string;
 }
 
 export default function Projects() {
+  const { portfolioData } = usePortfolio();
+  const projects = portfolioData.projects;
   const [activeCategory, setActiveCategory] = useState("All");
   const categories = ["All", "Docker", "Networking", "Web Dev"];
-
-  const projects: ProjectItem[] = [
-    {
-      filename: "infra.sh",
-      title: "Self-Hosted Cloud Infrastructure",
-      description:
-        "Designed and deployed a robust home-lab environment utilizing Docker and CasaOS on Armbian Linux. Implemented Nextcloud for secure, private data storage and sync across devices.",
-      tags: ["Docker", "CasaOS", "Armbian"],
-      githubUrl: "#",
-      category: "Docker",
-    },
-    {
-      filename: "network.conf",
-      title: "Distributed Database Networking",
-      description:
-        "Engineered a secure, zero-trust mesh network using Tailscale to link geographically distributed MariaDB instances, ensuring high availability and encrypted internal traffic without exposing ports.",
-      tags: ["Tailscale", "MariaDB", "ZeroTier"],
-      githubUrl: "#",
-      category: "Networking",
-    },
-    {
-      filename: "index.php",
-      title: "Exarabia Product Innovation",
-      description:
-        "Developed a full-stack web application focusing on clean UI/UX principles to showcase product innovations. Integrated backend PHP logic with a responsive, modern frontend.",
-      tags: ["PHP", "HTML/CSS", "UI/UX"],
-      githubUrl: "#",
-      liveUrl: "#",
-      category: "Web Dev",
-    },
-  ];
 
   const filteredProjects = activeCategory === "All"
     ? projects

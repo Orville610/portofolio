@@ -1,0 +1,82 @@
+{
+  "hero": {
+    "firstName": "Orville Giovanni",
+    "lastName": "Sambono",
+    "title": "Software Engineer",
+    "description": "A fresh Software Engineering graduate based in Makassar, passionate about self-hosted infrastructure, advanced networking, and web development. Engineering robust solutions from bare metal to the cloud."
+  },
+  "skills": [
+    "Linux (Armbian)",
+    "Docker",
+    "Nextcloud",
+    "Tailscale",
+    "ZeroTier",
+    "UI/UX Design",
+    "AI Prompting",
+    "HTML/CSS/PHP",
+    "Next.js",
+    "TypeScript",
+    "React",
+    "Tailwind CSS"
+  ],
+  "experience": [
+    {
+      "year": "2025",
+      "role": "Leader",
+      "organization": "Cloud Computing Community",
+      "description": "Spearheading initiatives to educate peers on modern infrastructure, orchestrating workshops on Docker, Linux administration, and self-hosted deployments.",
+      "iconName": "Users"
+    },
+    {
+      "year": "2025",
+      "role": "Coordinator",
+      "organization": "Christosel",
+      "description": "Managing team logistics and overseeing technical event operations to ensure seamless execution of community gatherings and digital integrations.",
+      "iconName": "GitBranch"
+    },
+    {
+      "year": "2024 - 2025",
+      "role": "Board Member",
+      "organization": "OSIS",
+      "description": "Contributed to student council governance, developing leadership and organizational skills while integrating technical solutions into administrative tasks.",
+      "iconName": "ClipboardList"
+    }
+  ],
+  "projects": [
+    {
+      "filename": "infra.sh",
+      "title": "Self-Hosted Cloud Infrastructure",
+      "description": "Designed and deployed a robust home-lab environment utilizing Docker and CasaOS on Armbian Linux. Implemented Nextcloud for secure, private data storage and sync across devices.",
+      "tags": ["Docker", "CasaOS", "Armbian"],
+      "githubUrl": "#",
+      "category": "Docker"
+    },
+    {
+      "filename": "network.conf",
+      "title": "Distributed Database Networking",
+      "description": "Engineered a secure, zero-trust mesh network using Tailscale to link geographically distributed MariaDB instances, ensuring high availability and encrypted internal traffic without exposing ports.",
+      "tags": ["Tailscale", "MariaDB", "ZeroTier"],
+      "githubUrl": "#",
+      "category": "Networking"
+    },
+    {
+      "filename": "index.php",
+      "title": "Exarabia Product Innovation",
+      "description": "Developed a full-stack web application focusing on clean UI/UX principles to showcase product innovations. Integrated backend PHP logic with a responsive, modern frontend.",
+      "tags": ["PHP", "HTML/CSS", "UI/UX"],
+      "githubUrl": "#",
+      "liveUrl": "#",
+      "category": "Web Dev"
+    }
+  ],
+  "certifications": [
+    {
+      "title": "Digiup Telkom Indonesia",
+      "desc": "Advanced Cloud Infrastructure & Networking"
+    },
+    {
+      "title": "Public Speaking & Leadership Workshops",
+      "desc": "Communication and Team Management Certification"
+    }
+  ]
+}

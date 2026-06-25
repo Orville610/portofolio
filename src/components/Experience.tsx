@@ -3,42 +3,32 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Users, GitBranch, ClipboardList, Briefcase } from "lucide-react";
+import { usePortfolio } from "@/context/PortfolioContext";
 
 interface ExperienceItem {
   year: string;
   role: string;
   organization: string;
   description: string;
-  icon: React.ReactNode;
+  iconName: string;
 }
 
+const getIconComponent = (iconName: string) => {
+  switch (iconName) {
+    case "Users":
+      return <Users className="w-5 h-5 text-on-surface-variant group-hover:text-primary transition-colors duration-300" />;
+    case "GitBranch":
+      return <GitBranch className="w-5 h-5 text-on-surface-variant group-hover:text-primary transition-colors duration-300" />;
+    case "ClipboardList":
+      return <ClipboardList className="w-5 h-5 text-on-surface-variant group-hover:text-primary transition-colors duration-300" />;
+    default:
+      return <Briefcase className="w-5 h-5 text-on-surface-variant group-hover:text-primary transition-colors duration-300" />;
+  }
+};
+
 export default function Experience() {
-  const experiences: ExperienceItem[] = [
-    {
-      year: "2025",
-      role: "Leader",
-      organization: "Cloud Computing Community",
-      description:
-        "Spearheading initiatives to educate peers on modern infrastructure, orchestrating workshops on Docker, Linux administration, and self-hosted deployments.",
-      icon: <Users className="w-5 h-5 text-on-surface-variant group-hover:text-primary transition-colors duration-300" />,
-    },
-    {
-      year: "2025",
-      role: "Coordinator",
-      organization: "Christosel",
-      description:
-        "Managing team logistics and overseeing technical event operations to ensure seamless execution of community gatherings and digital integrations.",
-      icon: <GitBranch className="w-5 h-5 text-on-surface-variant group-hover:text-primary transition-colors duration-300" />,
-    },
-    {
-      year: "2024 - 2025",
-      role: "Board Member",
-      organization: "OSIS",
-      description:
-        "Contributed to student council governance, developing leadership and organizational skills while integrating technical solutions into administrative tasks.",
-      icon: <ClipboardList className="w-5 h-5 text-on-surface-variant group-hover:text-primary transition-colors duration-300" />,
-    },
-  ];
+  const { portfolioData } = usePortfolio();
+  const experiences = portfolioData.experience;
 
   return (
     <section id="experience" className="py-12 relative">
@@ -63,7 +53,7 @@ export default function Experience() {
             >
               {/* Timeline marker node */}
               <div className="flex items-center justify-center w-10 h-10 rounded-full border border-outline-variant bg-background group-hover:border-primary shrink-0 z-10 transition-colors duration-300 absolute left-5 md:left-1/2 -translate-x-1/2">
-                {exp.icon}
+                {getIconComponent(exp.iconName)}
               </div>
 
               {/* Timeline card */}

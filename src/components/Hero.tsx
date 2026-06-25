@@ -4,8 +4,11 @@ import React, { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FolderOpen, Mail } from "lucide-react";
 import Image from "next/image";
+import { usePortfolio } from "@/context/PortfolioContext";
 
 export default function Hero() {
+  const { portfolioData } = usePortfolio();
+  const { firstName, lastName, title, description } = portfolioData.hero;
   const photoContainerRef = useRef<HTMLDivElement>(null);
   const [isOnline, setIsOnline] = useState(true);
 
@@ -136,22 +139,20 @@ export default function Hero() {
           {/* Hero Name / Header */}
           <div className="space-y-4 w-full">
             <h1 className="font-headline-lg-mobile md:font-headline-lg text-4xl md:text-5xl lg:text-6xl text-on-surface tracking-tight font-extrabold uppercase leading-none">
-              <span className="text-primary block mb-2">Orville Giovanni</span> Sambono
+              <span className="text-primary block mb-2">{firstName}</span> {lastName}
             </h1>
 
             {/* Typing CLI Subtitle */}
             <h2 className="font-headline-md text-lg md:text-2xl text-on-surface-variant text-muted-foreground mt-4 flex items-center justify-center md:justify-start gap-1 font-mono font-bold">
               <span className="text-secondary select-none">&gt;</span>
-              <span>Software Engineer</span>
+              <span>{title}</span>
               <span className="w-[10px] h-[20px] md:h-[24px] bg-secondary animate-pulse ml-1" />
             </h2>
           </div>
 
           {/* Bio Description */}
           <p className="font-body-lg text-base md:text-lg text-on-surface-variant max-w-[42rem] leading-relaxed text-muted-foreground">
-            A fresh Software Engineering graduate based in Makassar, passionate about
-            self-hosted infrastructure, advanced networking, and web development.
-            Engineering robust solutions from bare metal to the cloud.
+            {description}
           </p>
 
           {/* Action Buttons */}

@@ -10,10 +10,12 @@ import Projects from "@/components/Projects";
 import CertsContact from "@/components/CertsContact";
 import Footer from "@/components/Footer";
 import BootWrapper from "@/components/BootWrapper";
+import { PortfolioProvider } from "@/context/PortfolioContext";
+import AdminPanel from "@/components/AdminPanel";
 
 export default function Home() {
   return (
-    <>
+    <PortfolioProvider>
       {/* Interactive WebGL Shader Backdrop */}
       <ShaderBackground />
 
@@ -48,6 +50,9 @@ export default function Home() {
 
       {/* Global Footer */}
       <Footer />
-    </>
+
+      {/* Admin Panel Sliding Drawer */}
+      <AdminPanel />
+    </PortfolioProvider>
   );
 }

@@ -4,7 +4,11 @@ import React, { useState } from "react";
 import { Mail, Copy, Check, BadgeCheck, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
 
+import { usePortfolio } from "@/context/PortfolioContext";
+
 export default function CertsContact() {
+  const { portfolioData } = usePortfolio();
+  const certifications = portfolioData.certifications;
   const [copiedEmail, setCopiedEmail] = useState(false);
 
   const handleCopyEmail = (e: React.MouseEvent) => {
@@ -14,17 +18,6 @@ export default function CertsContact() {
     setCopiedEmail(true);
     setTimeout(() => setCopiedEmail(false), 2000);
   };
-
-  const certifications = [
-    {
-      title: "Digiup Telkom Indonesia",
-      desc: "Advanced Cloud Infrastructure & Networking",
-    },
-    {
-      title: "Public Speaking & Leadership Workshops",
-      desc: "Communication and Team Management Certification",
-    },
-  ];
 
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 gap-12 py-12 overflow-hidden" id="certs">
