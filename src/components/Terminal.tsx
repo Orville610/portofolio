@@ -13,6 +13,7 @@ interface LogEntry {
 
 export default function Terminal() {
   const { setIsAdmin, setShowAdminPanel } = usePortfolio();
+  const [currentUser, setCurrentUser] = useState("guest");
   const [isPromptingPassword, setIsPromptingPassword] = useState(false);
   const [history, setHistory] = useState<LogEntry[]>([
     { type: "output", text: "Welcome to Rville Cloud Terminal v1.0.0" },
@@ -45,7 +46,7 @@ export default function Terminal() {
     // Show masked input (dots) to mock typing
     setHistory((prev) => [
       ...prev,
-      { type: "input", text: "guest@rville-cloud:~$ " + "•".repeat(Math.max(1, pwd.length)) }
+      { type: "input", text: `${currentUser}@rville-cloud:~$ ` + "•".repeat(Math.max(1, pwd.length)) }
     ]);
 
     try {
@@ -94,10 +95,48 @@ export default function Terminal() {
       return;
     }
     const trimmedCmd = cmd.trim().toLowerCase();
-    const newHistory = [...history, { type: "input" as const, text: `guest@rville-cloud:~$ ${cmd}` }];
+    const newHistory = [...history, { type: "input" as const, text: `${currentUser}@rville-cloud:~$ ${cmd}` }];
 
     if (trimmedCmd === "") {
       setHistory(newHistory);
+      return;
+    }
+
+    // Passwordless Switch User (cosmetic)
+    if (trimmedCmd === "sudo rville") {
+      if (currentUser === "guest") {
+        setCurrentUser("rville");
+        setHistory([
+          ...history,
+          { type: "input", text: "guest@rville-cloud:~$ sudo rville" },
+          { type: "output", text: "Successfully switched to user 'rville'." }
+        ]);
+      } else {
+        setHistory([
+          ...history,
+          { type: "input", text: "rville@rville-cloud:~$ sudo rville" },
+          { type: "output", text: "Already logged in as rville." }
+        ]);
+      }
+      setInput("");
+      return;
+    }
+
+    // Sudo Elevation to Admin Panel (requires password)
+    if (trimmedCmd === "sudo su") {
+      if (currentUser === "rville") {
+        setHistory([
+          ...newHistory,
+          { type: "output", text: "[sudo] password for rville: " }
+        ]);
+        setIsPromptingPassword(true);
+      } else {
+        setHistory([
+          ...newHistory,
+          { type: "output", text: "Permission denied. Guest is not in the sudoers file. This incident will be reported." }
+        ]);
+      }
+      setInput("");
       return;
     }
 
@@ -249,11 +288,22 @@ Main goal: Engineering robust solutions from bare metal to the cloud, building r
         break;
 
       case "sudo":
-      case "sudo su":
-        setHistory([...newHistory, { type: "output", text: "[sudo] password for guest: " }]);
-        setIsPromptingPassword(true);
-        setInput("");
-        return;
+        if (currentUser === "guest") {
+          output = [
+            {
+              type: "output",
+              text: "Permission denied. Guest is not in the sudoers file. This incident will be reported.",
+            },
+          ];
+        } else {
+          output = [
+            {
+              type: "output",
+              text: "usage: sudo rville | sudo su",
+            },
+          ];
+        }
+        break;
 
       case "weather":
         output = [
@@ -407,7 +457,7 @@ Main goal: Engineering robust solutions from bare metal to the cloud, building r
             <div className="w-3 h-3 rounded-full bg-secondary-container" />
             <span className="font-code-sm text-xs text-on-surface-variant ml-2 select-none flex items-center gap-1.5">
               <TerminalIcon className="w-3.5 h-3.5 text-primary" />
-              guest@rville-cloud: ~ (interactive)
+              {currentUser}@rville-cloud: ~ (interactive)
             </span>
           </div>
           <button
@@ -441,8 +491,8 @@ Main goal: Engineering robust solutions from bare metal to the cloud, building r
 
         {/* Terminal Input Bar */}
         <div className="px-5 py-3 border-t border-outline-variant bg-surface-container-low/40 flex items-center gap-2">
-          <span className="text-secondary font-semibold font-mono select-none hidden sm:inline">guest@rville-cloud:~$</span>
-          <span className="text-secondary font-semibold font-mono select-none inline sm:hidden">guest:~$</span>
+          <span className="text-secondary font-semibold font-mono select-none hidden sm:inline">{currentUser}@rville-cloud:~$</span>
+          <span className="text-secondary font-semibold font-mono select-none inline sm:hidden">{currentUser}:~$</span>
           <input
             ref={inputRef}
             type={isPromptingPassword ? "password" : "text"}

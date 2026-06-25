@@ -62,15 +62,31 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const storedData = localStorage.getItem("portfolio_data");
-      if (storedData) {
-        setPortfolioData(JSON.parse(storedData));
+    const loadData = async () => {
+      try {
+        const res = await fetch("/api/portfolio");
+        if (res.ok) {
+          const serverData = await res.json();
+          setPortfolioData(serverData);
+          setIsLoading(false);
+          return;
+        }
+      } catch (err) {
+        console.warn("Failed to fetch portfolio data from server, falling back to local storage:", err);
       }
-    } catch (e) {
-      console.error("Failed to load portfolio data from localStorage:", e);
-    }
-    setIsLoading(false);
+
+      try {
+        const storedData = localStorage.getItem("portfolio_data");
+        if (storedData) {
+          setPortfolioData(JSON.parse(storedData));
+        }
+      } catch (e) {
+        console.error("Failed to load portfolio data from localStorage:", e);
+      }
+      setIsLoading(false);
+    };
+
+    loadData();
   }, []);
 
   const updatePortfolioData = (newData: PortfolioData) => {
