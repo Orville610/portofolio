@@ -34,7 +34,7 @@ export default function CertsContact() {
         <div className="flex flex-col space-y-4 mb-8">
           <h2 className="font-headline-md text-3xl font-bold tracking-tight text-on-surface flex items-center gap-3">
             <BadgeCheck className="text-primary w-7 h-7" />
-            <DecryptedText text="Certifications" animateOn="both" speed={35} />
+            <DecryptedText text="Certifications" animateOn="view" speed={35} />
           </h2>
         </div>
         <ul className="space-y-6">
@@ -74,7 +74,7 @@ export default function CertsContact() {
         <SpotlightCard className="p-6 transition-all duration-300 hover:border-primary/50">
           <div className="flex flex-col space-y-1.5 mb-4">
             <h2 className="font-headline-md text-2xl font-semibold leading-none tracking-tight text-on-surface">
-              <DecryptedText text="Initiate Connection" animateOn="both" speed={30} />
+              <DecryptedText text="Initiate Connection" animateOn="view" speed={30} />
             </h2>
             <p className="font-body-md text-sm text-on-surface-variant text-muted-foreground leading-relaxed">
               Looking to collaborate on infrastructure projects or discuss self-hosting solutions? Ping me.

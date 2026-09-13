@@ -38,7 +38,7 @@ export default function Experience() {
       <div className="mb-12">
         <h2 className="font-headline-md text-3xl font-bold tracking-tight text-on-surface flex items-center gap-3">
           <Briefcase className="text-primary w-7 h-7" />
-          <DecryptedText text="Experience & Leadership" animateOn="both" speed={35} />
+          <DecryptedText text="Experience & Leadership" animateOn="view" speed={35} />
         </h2>
       </div>
 

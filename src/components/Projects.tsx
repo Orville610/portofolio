@@ -34,7 +34,7 @@ export default function Projects() {
       <div className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <h2 className="font-headline-md text-3xl font-bold tracking-tight text-on-surface flex items-center gap-3">
           <Terminal className="text-primary w-7 h-7" />
-          <DecryptedText text="Featured Projects" animateOn="both" speed={35} />
+          <DecryptedText text="Featured Projects" animateOn="view" speed={35} />
         </h2>
 
         {/* Category Filters */}

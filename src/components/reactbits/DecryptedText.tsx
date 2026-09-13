@@ -113,14 +113,16 @@ export default function DecryptedText({
   }, [animateOn, text]);
 
   const handleMouseEnter = () => {
-    if (animateOn === "hover" || animateOn === "both") {
+    if (animateOn === "hover") {
       setIsHovering(true);
       triggerAnimation();
     }
   };
 
   const handleMouseLeave = () => {
-    setIsHovering(false);
+    if (animateOn === "hover") {
+      setIsHovering(false);
+    }
   };
 
   return (

@@ -149,7 +149,7 @@ export default function Hero() {
               <span className="text-primary block mb-2">
                 <DecryptedText
                   text={firstName}
-                  animateOn="both"
+                  animateOn="view"
                   speed={40}
                   maxIterations={14}
                   className="text-primary"
@@ -157,7 +157,7 @@ export default function Hero() {
               </span>
               <DecryptedText
                 text={lastName}
-                animateOn="both"
+                animateOn="view"
                 speed={40}
                 maxIterations={14}
               />
@@ -168,7 +168,7 @@ export default function Hero() {
               <span className="text-secondary select-none">&gt;</span>
               <DecryptedText
                 text={title}
-                animateOn="both"
+                animateOn="view"
                 speed={30}
                 maxIterations={10}
               />
