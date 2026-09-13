@@ -5,6 +5,8 @@ import { Mail, Copy, Check, BadgeCheck, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { usePortfolio } from "@/context/PortfolioContext";
+import SpotlightCard from "./reactbits/SpotlightCard";
+import DecryptedText from "./reactbits/DecryptedText";
 
 export default function CertsContact() {
   const { portfolioData } = usePortfolio();
@@ -32,7 +34,7 @@ export default function CertsContact() {
         <div className="flex flex-col space-y-4 mb-8">
           <h2 className="font-headline-md text-3xl font-bold tracking-tight text-on-surface flex items-center gap-3">
             <BadgeCheck className="text-primary w-7 h-7" />
-            Certifications
+            <DecryptedText text="Certifications" animateOn="both" speed={35} />
           </h2>
         </div>
         <ul className="space-y-6">
@@ -59,24 +61,25 @@ export default function CertsContact() {
         </ul>
       </motion.div>
 
-      {/* Sleek Initiate Connection Form Panel */}
+      {/* Sleek Initiate Connection Form Panel wrapped in SpotlightCard */}
       <motion.div
         initial={{ opacity: 0, x: 30 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
         whileHover={{ y: -4 }}
-        className="rounded-xl border border-outline-variant bg-surface-container-low/50 text-on-surface shadow-sm p-6 transition-all duration-300 hover:border-primary/50"
+        className="h-full"
         id="contact"
       >
-        <div className="flex flex-col space-y-1.5 mb-4">
-          <h2 className="font-headline-md text-2xl font-semibold leading-none tracking-tight text-on-surface">
-            Initiate Connection
-          </h2>
-          <p className="font-body-md text-sm text-on-surface-variant text-muted-foreground leading-relaxed">
-            Looking to collaborate on infrastructure projects or discuss self-hosting solutions? Ping me.
-          </p>
-        </div>
+        <SpotlightCard className="p-6 transition-all duration-300 hover:border-primary/50">
+          <div className="flex flex-col space-y-1.5 mb-4">
+            <h2 className="font-headline-md text-2xl font-semibold leading-none tracking-tight text-on-surface">
+              <DecryptedText text="Initiate Connection" animateOn="both" speed={30} />
+            </h2>
+            <p className="font-body-md text-sm text-on-surface-variant text-muted-foreground leading-relaxed">
+              Looking to collaborate on infrastructure projects or discuss self-hosting solutions? Ping me.
+            </p>
+          </div>
 
         <div className="space-y-4 pt-4">
           {/* Email Row */}
@@ -141,6 +144,7 @@ export default function CertsContact() {
           </div>
           */}
         </div>
+        </SpotlightCard>
       </motion.div>
     </section>
   );

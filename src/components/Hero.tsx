@@ -5,6 +5,9 @@ import { motion } from "framer-motion";
 import { FolderOpen, Mail } from "lucide-react";
 import Image from "next/image";
 import { usePortfolio } from "@/context/PortfolioContext";
+import DecryptedText from "./reactbits/DecryptedText";
+import ShinyText from "./reactbits/ShinyText";
+import Magnet from "./reactbits/Magnet";
 
 export default function Hero() {
   const { portfolioData } = usePortfolio();
@@ -119,7 +122,7 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.15 }}
           className="order-2 md:order-1 md:col-span-7 flex flex-col items-center md:items-start gap-6 z-30 relative -mt-8 md:mt-0 bg-background/90 md:bg-transparent backdrop-blur-md md:backdrop-blur-none p-6 sm:p-8 md:p-0 rounded-2xl md:rounded-none border border-outline-variant/50 md:border-0 shadow-2xl md:shadow-none w-[95%] md:w-full max-w-2xl md:max-w-none text-center md:text-left"
         >
-          {/* Online Status Badge */}
+          {/* Online Status Badge with ShinyText */}
           <div className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold gap-2 font-code-sm transition-all duration-300 ${
             isOnline 
               ? "border-emerald-500/30 text-emerald-400 bg-emerald-950/20" 
@@ -133,19 +136,42 @@ export default function Hero() {
                 isOnline ? "bg-emerald-500" : "bg-red-500"
               }`}></span>
             </span>
-            <span>SYS.STATUS: {isOnline ? "ONLINE" : "OFFLINE"}</span>
+            <ShinyText
+              text={`SYS.STATUS: ${isOnline ? "ONLINE" : "OFFLINE"}`}
+              speed={3}
+              className={isOnline ? "text-emerald-400" : "text-red-400"}
+            />
           </div>
 
-          {/* Hero Name / Header */}
+          {/* Hero Name / Header with DecryptedText */}
           <div className="space-y-4 w-full">
             <h1 className="font-headline-lg-mobile md:font-headline-lg text-4xl md:text-5xl lg:text-6xl text-on-surface tracking-tight font-extrabold uppercase leading-none">
-              <span className="text-primary block mb-2">{firstName}</span> {lastName}
+              <span className="text-primary block mb-2">
+                <DecryptedText
+                  text={firstName}
+                  animateOn="both"
+                  speed={40}
+                  maxIterations={14}
+                  className="text-primary"
+                />
+              </span>
+              <DecryptedText
+                text={lastName}
+                animateOn="both"
+                speed={40}
+                maxIterations={14}
+              />
             </h1>
 
-            {/* Typing CLI Subtitle */}
+            {/* Typing CLI Subtitle with DecryptedText */}
             <h2 className="font-headline-md text-lg md:text-2xl text-on-surface-variant text-muted-foreground mt-4 flex items-center justify-center md:justify-start gap-1 font-mono font-bold">
               <span className="text-secondary select-none">&gt;</span>
-              <span>{title}</span>
+              <DecryptedText
+                text={title}
+                animateOn="both"
+                speed={30}
+                maxIterations={10}
+              />
               <span className="w-[10px] h-[20px] md:h-[24px] bg-secondary animate-pulse ml-1" />
             </h2>
           </div>
@@ -155,22 +181,26 @@ export default function Hero() {
             {description}
           </p>
 
-          {/* Action Buttons */}
+          {/* Action Buttons wrapped in Magnet */}
           <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4 mt-2 w-full sm:w-auto">
-            <a
-              href="#projects"
-              className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-on-primary hover:bg-primary/90 h-12 px-6 py-2 hover-glow-primary-lg font-label-md gap-2 w-full sm:w-auto"
-            >
-              <FolderOpen className="h-5 w-5" />
-              View Projects
-            </a>
-            <a
-              href="#contact"
-              className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-outline-variant bg-background hover:bg-surface-container hover:text-on-surface h-12 px-6 py-2 font-label-md gap-2 w-full sm:w-auto"
-            >
-              <Mail className="h-5 w-5" />
-              Contact Me
-            </a>
+            <Magnet padding={35} magnetStrength={3}>
+              <a
+                href="#projects"
+                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-on-primary hover:bg-primary/90 h-12 px-6 py-2 hover-glow-primary-lg font-label-md gap-2 w-full sm:w-auto"
+              >
+                <FolderOpen className="h-5 w-5" />
+                View Projects
+              </a>
+            </Magnet>
+            <Magnet padding={35} magnetStrength={3}>
+              <a
+                href="#contact"
+                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-outline-variant bg-background hover:bg-surface-container hover:text-on-surface h-12 px-6 py-2 font-label-md gap-2 w-full sm:w-auto"
+              >
+                <Mail className="h-5 w-5" />
+                Contact Me
+              </a>
+            </Magnet>
           </div>
         </motion.div>
       </div>

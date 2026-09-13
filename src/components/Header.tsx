@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Terminal } from "lucide-react";
 
+import Magnet from "./reactbits/Magnet";
+
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -67,12 +69,14 @@ export default function Header() {
 
         {/* Resume / CTA Button */}
         <div className="hidden md:flex items-center space-x-2">
-          <a
-            href="#"
-            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-on-primary hover:bg-primary/90 h-9 px-4 py-2 hover-glow-primary-lg font-label-md duration-300"
-          >
-            Resume
-          </a>
+          <Magnet padding={25} magnetStrength={3}>
+            <a
+              href="#"
+              className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-on-primary hover:bg-primary/90 h-9 px-4 py-2 hover-glow-primary-lg font-label-md duration-300"
+            >
+              Resume
+            </a>
+          </Magnet>
         </div>
 
         {/* Mobile Menu Toggle */}

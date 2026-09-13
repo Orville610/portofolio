@@ -4,6 +4,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Users, GitBranch, ClipboardList, Briefcase } from "lucide-react";
 import { usePortfolio } from "@/context/PortfolioContext";
+import SpotlightCard from "./reactbits/SpotlightCard";
+import DecryptedText from "./reactbits/DecryptedText";
 
 interface ExperienceItem {
   year: string;
@@ -36,7 +38,7 @@ export default function Experience() {
       <div className="mb-12">
         <h2 className="font-headline-md text-3xl font-bold tracking-tight text-on-surface flex items-center gap-3">
           <Briefcase className="text-primary w-7 h-7" />
-          Experience &amp; Leadership
+          <DecryptedText text="Experience & Leadership" animateOn="both" speed={35} />
         </h2>
       </div>
 
@@ -56,26 +58,28 @@ export default function Experience() {
                 {getIconComponent(exp.iconName)}
               </div>
 
-              {/* Timeline card */}
+              {/* Timeline card with SpotlightCard */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`w-[calc(100%-3rem)] ml-12 md:ml-0 md:w-[calc(50%-2.5rem)] rounded-xl border border-outline-variant bg-surface-container-low/40 text-on-surface shadow-sm p-6 hover:border-primary hover-glow-primary-md`}
+                className="w-[calc(100%-3rem)] ml-12 md:ml-0 md:w-[calc(50%-2.5rem)]"
               >
-                <div className="font-code-sm text-xs font-semibold text-primary mb-1">
-                  {exp.year}
-                </div>
-                <h3 className="font-headline-md font-semibold tracking-tight text-lg mb-1">
-                  {exp.role}
-                </h3>
-                <div className="font-label-md text-sm text-muted-foreground text-on-surface-variant mb-3">
-                  {exp.organization}
-                </div>
-                <p className="font-body-md text-sm text-on-surface-variant leading-relaxed">
-                  {exp.description}
-                </p>
+                <SpotlightCard className="p-6 hover:border-primary hover-glow-primary-md transition-colors duration-300">
+                  <div className="font-code-sm text-xs font-semibold text-primary mb-1">
+                    {exp.year}
+                  </div>
+                  <h3 className="font-headline-md font-semibold tracking-tight text-lg mb-1">
+                    {exp.role}
+                  </h3>
+                  <div className="font-label-md text-sm text-muted-foreground text-on-surface-variant mb-3">
+                    {exp.organization}
+                  </div>
+                  <p className="font-body-md text-sm text-on-surface-variant leading-relaxed">
+                    {exp.description}
+                  </p>
+                </SpotlightCard>
               </motion.div>
             </div>
           );
