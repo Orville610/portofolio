@@ -7,7 +7,6 @@ import Image from "next/image";
 import { usePortfolio } from "@/context/PortfolioContext";
 import DecryptedText from "./reactbits/DecryptedText";
 import ShinyText from "./reactbits/ShinyText";
-import Magnet from "./reactbits/Magnet";
 
 export default function Hero() {
   const { portfolioData } = usePortfolio();
@@ -181,26 +180,22 @@ export default function Hero() {
             {description}
           </p>
 
-          {/* Action Buttons wrapped in Magnet */}
+          {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4 mt-2 w-full sm:w-auto">
-            <Magnet padding={35} magnetStrength={3}>
-              <a
-                href="#projects"
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-on-primary hover:bg-primary/90 h-12 px-6 py-2 hover-glow-primary-lg font-label-md gap-2 w-full sm:w-auto"
-              >
-                <FolderOpen className="h-5 w-5" />
-                View Projects
-              </a>
-            </Magnet>
-            <Magnet padding={35} magnetStrength={3}>
-              <a
-                href="#contact"
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-outline-variant bg-background hover:bg-surface-container hover:text-on-surface h-12 px-6 py-2 font-label-md gap-2 w-full sm:w-auto"
-              >
-                <Mail className="h-5 w-5" />
-                Contact Me
-              </a>
-            </Magnet>
+            <a
+              href="#projects"
+              className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-on-primary hover:bg-primary/90 h-12 px-6 py-2 hover-glow-primary-lg font-label-md gap-2 w-full sm:w-auto"
+            >
+              <FolderOpen className="h-5 w-5" />
+              View Projects
+            </a>
+            <a
+              href="#contact"
+              className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-outline-variant bg-background hover:bg-surface-container hover:text-on-surface h-12 px-6 py-2 font-label-md gap-2 w-full sm:w-auto"
+            >
+              <Mail className="h-5 w-5" />
+              Contact Me
+            </a>
           </div>
         </motion.div>
       </div>
