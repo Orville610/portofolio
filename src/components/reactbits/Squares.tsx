@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 interface SquaresProps {
   direction?: "diagonal" | "up" | "right" | "down" | "left";
@@ -10,133 +10,73 @@ interface SquaresProps {
   hoverFillColor?: string;
   className?: string;
 }
-
-export default function Squares({
-  direction = "diagonal",
-  speed = 0.4,
-  borderColor = "rgba(255, 255, 255, 0.05)",
-  squareSize = 40,
-  hoverFillColor = "rgba(229, 9, 20, 0.15)",
-  className = "",
-}: SquaresProps) {
+export default function Squares({ direction = "diagonal", speed = 0.35, borderColor = "rgba(255,255,255,0.04)", squareSize = 45, hoverFillColor = "rgba(229,9,20,0.12)", className = "" }: SquaresProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let animationFrameId: number;
-    let gridOffset = { x: 0, y: 0 };
-    let mousePosition = { x: -1000, y: -1000 };
-
-    const resizeCanvas = () => {
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      ctx.scale(dpr, dpr);
-    };
-
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
-
-    const handleMouseMove = (e: MouseEvent) => {
-      mousePosition = { x: e.clientX, y: e.clientY };
-    };
-
-    const handleMouseLeave = () => {
-      mousePosition = { x: -1000, y: -1000 };
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseout", handleMouseLeave);
-
-    const render = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-
-      ctx.clearRect(0, 0, width, height);
-
-      // Update grid offset based on direction
-      switch (direction) {
-        case "diagonal":
-          gridOffset.x = (gridOffset.x - speed + squareSize) % squareSize;
-          gridOffset.y = (gridOffset.y - speed + squareSize) % squareSize;
-          break;
-        case "up":
-          gridOffset.y = (gridOffset.y - speed + squareSize) % squareSize;
-          break;
-        case "down":
-          gridOffset.y = (gridOffset.y + speed) % squareSize;
-          break;
-        case "left":
-          gridOffset.x = (gridOffset.x - speed + squareSize) % squareSize;
-          break;
-        case "right":
-          gridOffset.x = (gridOffset.x + speed) % squareSize;
-          break;
+    const context = canvas?.getContext("2d");
+    if (!canvas || !context) return;
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    const coarse = matchMedia("(pointer: coarse), (max-width: 767px)");
+    let width = 0, height = 0, frame = 0, last = 0, offset = 0;
+    let mouseX = -1000, mouseY = -1000;
+    const draw = () => {
+      context.clearRect(0, 0, width, height);
+      const xOffset = ["diagonal", "left", "right"].includes(direction) ? offset : 0;
+      const yOffset = ["diagonal", "up", "down"].includes(direction) ? offset : 0;
+      if (mouseX >= 0 && mouseY >= 0 && !coarse.matches) {
+        context.fillStyle = hoverFillColor;
+        context.fillRect(Math.floor((mouseX - xOffset) / squareSize) * squareSize + xOffset, Math.floor((mouseY - yOffset) / squareSize) * squareSize + yOffset, squareSize, squareSize);
       }
-
-      const numCols = Math.ceil(width / squareSize) + 2;
-      const numRows = Math.ceil(height / squareSize) + 2;
-
-      const startX = Math.floor(gridOffset.x) - squareSize;
-      const startY = Math.floor(gridOffset.y) - squareSize;
-
-      // Draw squares
-      for (let i = 0; i < numCols; i++) {
-        for (let j = 0; j < numRows; j++) {
-          const sqX = startX + i * squareSize;
-          const sqY = startY + j * squareSize;
-
-          // Check if mouse is inside this square
-          const isHovered =
-            mousePosition.x >= sqX &&
-            mousePosition.x < sqX + squareSize &&
-            mousePosition.y >= sqY &&
-            mousePosition.y < sqY + squareSize;
-
-          // Distance for subtle radial neighbor glow
-          const centerX = sqX + squareSize / 2;
-          const centerY = sqY + squareSize / 2;
-          const dist = Math.hypot(mousePosition.x - centerX, mousePosition.y - centerY);
-
-          if (isHovered) {
-            ctx.fillStyle = hoverFillColor;
-            ctx.fillRect(sqX, sqY, squareSize, squareSize);
-          } else if (dist < squareSize * 2.2) {
-            // Neighbor glow
-            const alpha = Math.max(0, 1 - dist / (squareSize * 2.2)) * 0.08;
-            ctx.fillStyle = `rgba(229, 9, 20, ${alpha})`;
-            ctx.fillRect(sqX, sqY, squareSize, squareSize);
-          }
-
-          ctx.strokeStyle = borderColor;
-          ctx.lineWidth = 1;
-          ctx.strokeRect(sqX, sqY, squareSize, squareSize);
-        }
-      }
-
-      animationFrameId = requestAnimationFrame(render);
+      context.beginPath();
+      for (let x = xOffset - squareSize; x <= width; x += squareSize) { context.moveTo(x, 0); context.lineTo(x, height); }
+      for (let y = yOffset - squareSize; y <= height; y += squareSize) { context.moveTo(0, y); context.lineTo(width, y); }
+      context.strokeStyle = borderColor;
+      context.lineWidth = 1;
+      context.stroke();
     };
-
-    render();
-
+    const animate = (time: number) => {
+      if (document.hidden || reduced.matches || coarse.matches) { frame = 0; return; }
+      if (time - last >= 1000 / 30) {
+        offset = (offset + speed * (["right", "down"].includes(direction) ? 1 : -1) + squareSize) % squareSize;
+        draw();
+        last = time;
+      }
+      frame = requestAnimationFrame(animate);
+    };
+    const restart = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      draw();
+      if (!document.hidden && !reduced.matches && !coarse.matches) frame = requestAnimationFrame(animate);
+    };
+    const resize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
+      restart();
+    };
+    const pointer = (event: PointerEvent) => { mouseX = event.clientX; mouseY = event.clientY; };
+    resize();
+    window.addEventListener("resize", resize, { passive: true });
+    window.addEventListener("pointermove", pointer, { passive: true });
+    document.addEventListener("visibilitychange", restart);
+    reduced.addEventListener("change", restart);
+    coarse.addEventListener("change", restart);
     return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener("resize", resizeCanvas);
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseout", handleMouseLeave);
+      cancelAnimationFrame(frame);
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("pointermove", pointer);
+      document.removeEventListener("visibilitychange", restart);
+      reduced.removeEventListener("change", restart);
+      coarse.removeEventListener("change", restart);
     };
   }, [direction, speed, borderColor, squareSize, hoverFillColor]);
-
-  return (
-    <div className={`fixed inset-0 w-full h-full -z-10 pointer-events-none overflow-hidden ${className}`}>
-      <canvas ref={canvasRef} className="w-full h-full block" />
-      {/* Subtle vignette for contrast and depth */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/60 pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(229,9,20,0.08),rgba(255,255,255,0))] pointer-events-none" />
-    </div>
-  );
+  return <div className={`pointer-events-none fixed inset-0 -z-10 overflow-hidden ${className}`} aria-hidden="true">
+    <canvas ref={canvasRef} className="block h-full w-full" />
+    <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/60" />
+  </div>;
 }

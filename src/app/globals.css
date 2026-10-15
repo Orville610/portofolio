@@ -1,202 +1,86 @@
 @import "tailwindcss";
 
 :root {
-  --primary-rgb: 229, 9, 20;        /* True Netflix Red (#e50914) */
-  --secondary-rgb: 255, 69, 58;      /* Vibrant Orange-Red (#ff453a) */
+  --primary-rgb: 229, 9, 20;
+  --secondary-rgb: 255, 69, 58;
 }
-
 @theme {
-  /* MD3-inspired Theme Colors */
   --color-primary: rgb(var(--primary-rgb));
+  --color-primary-text: #ff7770;
   --color-on-primary: #ffffff;
   --color-primary-container: #2d0c0c;
   --color-on-primary-container: #ffdad6;
-  
   --color-secondary: rgb(var(--secondary-rgb));
   --color-on-secondary: #ffffff;
   --color-secondary-container: #3d1410;
   --color-on-secondary-container: #ffdcd3;
-
-  --color-tertiary: #e1e2e5;
-  --color-on-tertiary: #1a1c1e;
-  --color-tertiary-container: #202024;
-  --color-on-tertiary-container: #e1e2e5;
-
-  --color-error: #ffb4ab;
-  --color-on-error: #690005;
-  --color-error-container: #93000a;
-  --color-on-error-container: #ffdad6;
-
   --color-background: #0f0f11;
   --color-on-background: #f4f4f6;
   --color-surface: #0f0f11;
   --color-on-surface: #f4f4f6;
-
-  --color-surface-variant: #2d2e33;
   --color-on-surface-variant: #e1e2e5;
-  --color-outline: #8e9099;
-  --color-outline-variant: #45474f;
-
-  --color-surface-dim: #0f0f11;
-  --color-surface-bright: #36373d;
   --color-surface-container-lowest: #08080a;
   --color-surface-container-low: #17181c;
   --color-surface-container: #1b1c21;
   --color-surface-container-high: #25262c;
-  --color-surface-container-highest: #2d2e33;
-
-  --color-inverse-surface: #f4f4f6;
-  --color-inverse-on-surface: #2d2e33;
-  --color-inverse-primary: #ff3b30;
-
-  --color-primary-fixed: #ffdad6;
-  --color-primary-fixed-dim: #ff3b30;
-  --color-on-primary-fixed: #4a0300;
-  --color-on-primary-fixed-variant: #b31b1b;
-
-  --color-secondary-fixed: #ffdcd3;
-  --color-secondary-fixed-dim: #ff6b5a;
-  --color-on-secondary-fixed: #4a0e05;
-  --color-on-secondary-fixed-variant: #7d1b0d;
-
-  --color-tertiary-fixed: #e1e2e5;
-  --color-tertiary-fixed-dim: #e1e2e5;
-  --color-on-tertiary-fixed: #1a1c1e;
-  --color-on-tertiary-fixed-variant: #2f3033;
-
-  --color-surface-tint: #ff3b30;
-
-  /* Fonts mapped from CSS variables output by layout.tsx font-loaders */
-  --font-body-md: var(--font-inter), sans-serif;
-  --font-body-lg: var(--font-inter), sans-serif;
-  --font-headline-lg: var(--font-jetbrains-mono), monospace;
-  --font-headline-lg-mobile: var(--font-jetbrains-mono), monospace;
-  --font-headline-md: var(--font-jetbrains-mono), monospace;
-  --font-label-md: var(--font-jetbrains-mono), monospace;
-  --font-code-sm: var(--font-jetbrains-mono), monospace;
-
-  /* Custom spacing override */
-  --spacing-base: 4px;
-  --spacing-md: 2rem;
-  --spacing-sm: 1rem;
+  --color-outline: #8e9099;
+  --color-outline-variant: #45474f;
+  --color-muted-foreground: #b5b7c0;
+  --color-ring: #ff7770;
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+  --font-body-md: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body-lg: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-headline-lg: ui-sans-serif, system-ui, sans-serif;
+  --font-headline-lg-mobile: ui-sans-serif, system-ui, sans-serif;
+  --font-headline-md: ui-sans-serif, system-ui, sans-serif;
+  --font-label-md: ui-sans-serif, system-ui, sans-serif;
+  --font-code-sm: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, monospace;
   --spacing-max-width: 1200px;
-  --spacing-lg: 4rem;
-  --spacing-xl: 8rem;
-  --spacing-xs: 0.5rem;
-  --spacing-margin-mobile: 16px;
-  --spacing-gutter: 24px;
-
-  /* Custom Border Radius override */
-  --radius-default: 0.125rem;
-  --radius-lg: 0.25rem;
-  --radius-xl: 0.5rem;
-  --radius-full: 0.75rem;
-  --radius-md: calc(0.5rem - 2px);
-  --radius-sm: calc(0.5rem - 4px);
-
-  /* Animation keyframes */
-  --animate-marquee: marquee 20s linear infinite;
-  --animate-shine: shine 4s linear infinite;
-
-  @keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-
-  @keyframes shine {
-    0% { background-position: 100%; }
-    100% { background-position: -100%; }
-  }
 }
-
-/* Custom Tailwind v4 Utilities */
-@utility scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-@utility terminal-glow {
-  box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.3);
-}
-
-@utility terminal-glow-hover {
-  transition: box-shadow 0.2s ease-in-out;
-  &:hover {
-    box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.6);
-  }
-}
-
-@utility success-glow {
-  box-shadow: 0 0 15px rgba(var(--secondary-rgb), 0.2);
-}
-
-@utility hover-glow-primary-lg {
-  transition: box-shadow 0.3s ease;
-  &:hover {
-    box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.5);
-  }
-}
-
-@utility glow-primary-md {
-  box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3);
-}
-
-@utility hover-glow-primary-sm {
-  transition: box-shadow 0.3s ease;
-  &:hover {
-    box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.06);
-  }
-}
-
-@utility hover-glow-primary-md {
-  transition: box-shadow 0.3s ease;
-  &:hover {
-    box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.08);
-  }
-}
-
-@utility glow-secondary-sm {
-  box-shadow: 0 0 15px rgba(var(--secondary-rgb), 0.08);
-}
-
-@utility marquee-content {
-  display: flex;
-  animation: var(--animate-marquee);
-}
-
-/* Base Styles */
+html { scroll-behavior: smooth; }
 body {
-  background-color: var(--color-background);
+  background: var(--color-background);
   color: var(--color-on-surface);
   font-family: var(--font-body-md);
-  overflow-x: hidden;
+  overflow-x: clip;
+  overflow-wrap: anywhere;
 }
-
-::-webkit-scrollbar {
-  width: 8px;
+main, main [id] { scroll-margin-top: 5rem; }
+button, summary, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
+button, summary { cursor: pointer; }
+button:disabled { cursor: wait; }
+:focus-visible { outline: 2px solid var(--color-primary-text); outline-offset: 4px; }
+.skip-link {
+  position: fixed; top: 0.75rem; left: 1rem; z-index: 100;
+  transform: translateY(-200%); background: var(--color-background);
+  color: var(--color-on-surface); padding: 0.75rem 1rem;
+  border: 2px solid var(--color-primary-text); border-radius: 0.5rem;
 }
-::-webkit-scrollbar-track {
-  background: var(--color-background);
+.skip-link:focus { transform: translateY(0); }
+.spotlight-card::before {
+  content: ""; pointer-events: none; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, var(--spotlight-color), transparent 75%);
+  opacity: 0; transition: opacity 200ms ease;
 }
-::-webkit-scrollbar-thumb {
-  background: var(--color-surface-container-high);
-  border-radius: var(--radius-lg);
+.spotlight-card:hover::before, .spotlight-card:focus-within::before { opacity: 1; }
+details > summary::marker { content: ""; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--color-background); }
+::-webkit-scrollbar-thumb { background: var(--color-outline-variant); border-radius: 8px; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important; scroll-behavior: auto !important;
+  }
 }
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-outline-variant);
+@media print {
+  @page { size: A4; margin: 16mm; }
+  html, body { background: white !important; color: #111 !important; }
+  .resume-sheet, .resume-sheet * { color: #111 !important; border-color: #ccc !important; }
+  .resume-sheet { max-width: none; padding: 0 !important; font-size: 10pt; }
+  .resume-sheet section, .resume-sheet article { break-inside: avoid; }
+  .resume-sheet a { text-decoration: none; }
 }
-
-/* Scroll Snap/Smooth Behavior */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Hide phantom-ui component until registered to avoid content flash */
-phantom-ui:not(:defined) {
-  opacity: 0;
-  display: block;
-}
-

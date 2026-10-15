@@ -1,155 +1,64 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
-
-export interface HeroData {
-  firstName: string;
-  lastName: string;
-  title: string;
-  description: string;
-}
-
-export interface ExperienceData {
-  year: string;
-  role: string;
-  organization: string;
-  description: string;
-  iconName: string;
-}
-
-export interface ProjectData {
-  filename: string;
-  title: string;
-  description: string;
-  tags: string[];
-  githubUrl?: string;
-  liveUrl?: string;
-  category: string;
-}
-
-export interface CertificationData {
-  title: string;
-  desc: string;
-}
-
-export interface PortfolioData {
-  hero: HeroData;
-  skills: string[];
-  experience: ExperienceData[];
-  projects: ProjectData[];
-  certifications: CertificationData[];
-}
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import type { PortfolioData, SaveResult } from "@/lib/portfolio";
+export type { HeroData, ExperienceData, ProjectData, CertificationData, PortfolioData } from "@/lib/portfolio";
 
 interface PortfolioContextType {
   portfolioData: PortfolioData;
-  updatePortfolioData: (data: PortfolioData) => void;
   isAdmin: boolean;
-  setIsAdmin: (isAdmin: boolean) => void;
   showAdminPanel: boolean;
-  setShowAdminPanel: (show: boolean) => void;
-  saveData: (data: PortfolioData) => Promise<{ success: boolean; message: string }>;
-  isLoading: boolean;
+  setShowAdminPanel: (value: boolean) => void;
+  login: (password: string) => Promise<SaveResult>;
+  saveData: (data: PortfolioData) => Promise<SaveResult>;
+  logout: () => Promise<SaveResult>;
 }
-
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
-
-import initialLocalData from "../data/portfolio.json";
-
-export function PortfolioProvider({ children }: { children: React.ReactNode }) {
-  const [portfolioData, setPortfolioData] = useState<PortfolioData>(initialLocalData as PortfolioData);
+export function PortfolioProvider({ children, initialData }: { children: ReactNode; initialData: PortfolioData }) {
+  const [portfolioData, setPortfolioData] = useState(initialData);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const res = await fetch("/api/portfolio");
-        if (res.ok) {
-          const serverData = await res.json();
-          setPortfolioData(serverData);
-          setIsLoading(false);
-          return;
-        }
-      } catch (err) {
-        console.warn("Failed to fetch portfolio data from server, falling back to local storage:", err);
-      }
-
-      try {
-        const storedData = localStorage.getItem("portfolio_data");
-        if (storedData) {
-          setPortfolioData(JSON.parse(storedData));
-        }
-      } catch (e) {
-        console.error("Failed to load portfolio data from localStorage:", e);
-      }
-      setIsLoading(false);
-    };
-
-    loadData();
+    const controller = new AbortController();
+    void fetch("/api/auth", { cache: "no-store", signal: controller.signal })
+      .then(response => response.ok ? response.json() : null)
+      .then(result => { if (result && !controller.signal.aborted) setIsAdmin(result.authenticated === true); })
+      .catch(() => {});
+    return () => controller.abort();
   }, []);
-
-  const updatePortfolioData = (newData: PortfolioData) => {
-    setPortfolioData(newData);
+  const login = useCallback(async (password: string): Promise<SaveResult> => {
     try {
-      localStorage.setItem("portfolio_data", JSON.stringify(newData));
-    } catch (e) {
-      console.error("Failed to save portfolio data to localStorage:", e);
-    }
-  };
-
-  const saveData = async (newData: PortfolioData): Promise<{ success: boolean; message: string }> => {
-    updatePortfolioData(newData);
-
+      const response = await fetch("/api/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password }) });
+      const result = await response.json();
+      if (!response.ok || result.success !== true) return { success: false, message: result.message || "Could not sign in." };
+      setIsAdmin(true);
+      return { success: true, message: "Signed in." };
+    } catch { return { success: false, message: "Could not reach the sign-in service. Please try again." }; }
+  }, []);
+  const saveData = useCallback(async (data: PortfolioData): Promise<SaveResult> => {
     try {
-      const res = await fetch("/api/portfolio", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newData),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to save data on server");
-      }
-
-      const result = await res.json();
-      return {
-        success: true,
-        message: result.message || "Changes saved successfully!"
-      };
-    } catch (error: any) {
-      console.warn("Server save error (expected in read-only production environments):", error);
-      return {
-        success: true,
-        message: "Saved locally to browser storage (Server is read-only in production)."
-      };
-    }
-  };
-
-  return (
-    <PortfolioContext.Provider
-      value={{
-        portfolioData,
-        updatePortfolioData,
-        isAdmin,
-        setIsAdmin,
-        showAdminPanel,
-        setShowAdminPanel,
-        saveData,
-        isLoading,
-      }}
-    >
-      {children}
-    </PortfolioContext.Provider>
-  );
+      const response = await fetch("/api/portfolio", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+      const result = await response.json();
+      if (!response.ok || result.success !== true) return { success: false, message: result.message || "Changes could not be saved. Your draft is still open.", requiresLogin: response.status === 401 };
+      setPortfolioData(result.data);
+      return { success: true, message: result.message };
+    } catch { return { success: false, message: "Could not reach the server. Your draft is still open; please try again." }; }
+  }, []);
+  const logout = useCallback(async (): Promise<SaveResult> => {
+    try {
+      const response = await fetch("/api/auth", { method: "DELETE" });
+      if (!response.ok) return { success: false, message: "Could not sign out. Please try again." };
+      setIsAdmin(false); setShowAdminPanel(false);
+      return { success: true, message: "Signed out." };
+    } catch { return { success: false, message: "Could not sign out. Please try again." }; }
+  }, []);
+  const value = useMemo(() => ({ portfolioData, isAdmin, showAdminPanel, setShowAdminPanel, login, saveData, logout }), [portfolioData, isAdmin, showAdminPanel, login, saveData, logout]);
+  return <PortfolioContext.Provider value={value}>{children}</PortfolioContext.Provider>;
 }
-
 export function usePortfolio() {
   const context = useContext(PortfolioContext);
-  if (!context) {
-    throw new Error("usePortfolio must be used within a PortfolioProvider");
-  }
+  if (!context) throw new Error("usePortfolio must be used within a PortfolioProvider");
   return context;
 }
+
+export function useOptionalPortfolio() { return useContext(PortfolioContext); }

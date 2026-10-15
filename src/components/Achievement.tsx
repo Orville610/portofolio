@@ -1,43 +1,22 @@
 "use client";
 
-import React from "react";
 import { Trophy } from "lucide-react";
-import { motion } from "framer-motion";
+import { usePortfolio } from "@/context/PortfolioContext";
+import { externalUrl } from "@/lib/portfolio";
 import SpotlightCard from "./reactbits/SpotlightCard";
-import ShinyText from "./reactbits/ShinyText";
 
 export default function Achievement() {
-  return (
-    <motion.section
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-      className="w-full my-8"
-    >
-      <SpotlightCard
-        spotlightColor="rgba(255, 69, 58, 0.2)"
-        className="border-secondary/30 bg-surface-container/35 text-on-surface glow-secondary-sm p-6 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden backdrop-blur-sm group hover:border-secondary/55 transition-all duration-300"
-      >
-        {/* Glow decoration */}
-        <div className="absolute top-0 right-0 w-24 h-24 bg-secondary/10 rounded-full blur-xl pointer-events-none group-hover:bg-secondary/15 transition-all" />
-        
-        <div className="w-12 h-12 rounded-full bg-secondary/10 border border-secondary/35 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
-          <Trophy className="h-6 w-6 text-secondary animate-pulse" />
-        </div>
-        
-        <div>
-          <div className="font-code-sm text-xs font-semibold text-secondary mb-1 tracking-wider select-none">
-            <ShinyText text="ACHIEVEMENT_UNLOCKED" speed={3} className="text-secondary" />
-          </div>
-          <h3 className="font-headline-md text-xl font-semibold tracking-tight text-on-surface mb-2">
-            National Finalist - Cloud Computing
-          </h3>
-          <p className="font-body-md text-sm text-on-surface-variant leading-relaxed">
-            Recognized by the Ministry of Education, 2024. Competed nationwide designing resilient and scalable cloud architectures under strict constraints.
-          </p>
-        </div>
-      </SpotlightCard>
-    </motion.section>
-  );
+  const { portfolioData: { achievement } } = usePortfolio();
+  if (!achievement) return null;
+  return <section aria-labelledby="achievement-title">
+    <SpotlightCard className="flex flex-col gap-4 border-secondary/35 p-5 md:flex-row md:items-start md:p-6">
+      <Trophy className="h-8 w-8 shrink-0 text-secondary" aria-hidden="true" />
+      <div>
+        <p className="mb-2 font-code-sm text-xs font-semibold text-on-secondary-container">{achievement.organization} · {achievement.year}</p>
+        <h2 id="achievement-title" className="text-xl font-semibold">{achievement.title}</h2>
+        <p className="mt-3 text-sm leading-relaxed text-on-surface-variant">{achievement.description}</p>
+        {externalUrl(achievement.proofUrl) && <a href={externalUrl(achievement.proofUrl)} className="mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-primary-text">View achievement ↗</a>}
+      </div>
+    </SpotlightCard>
+  </section>;
 }

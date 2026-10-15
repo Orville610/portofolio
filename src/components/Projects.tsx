@@ -1,148 +1,57 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { ExternalLink, Folder, Terminal } from "lucide-react";
-
+import Link from "next/link";
+import Image from "next/image";
+import BrandIcon from "./BrandIcon";
+import { useState } from "react";
+import { ArrowUpRight, ExternalLink, Folder, Terminal } from "lucide-react";
 import { usePortfolio } from "@/context/PortfolioContext";
+import { externalUrl, projectSlug } from "@/lib/portfolio";
 import SpotlightCard from "./reactbits/SpotlightCard";
-import DecryptedText from "./reactbits/DecryptedText";
-
-interface ProjectItem {
-  filename: string;
-  title: string;
-  description: string;
-  tags: string[];
-  githubUrl?: string;
-  liveUrl?: string;
-  category: string;
-}
 
 export default function Projects() {
-  const { portfolioData } = usePortfolio();
-  const projects = portfolioData.projects;
+  const { portfolioData: { projects } } = usePortfolio();
   const [activeCategory, setActiveCategory] = useState("All");
-  const categories = ["All", "Docker", "Networking", "Web Dev"];
-
-  const filteredProjects = activeCategory === "All"
-    ? projects
-    : projects.filter((p) => p.category === activeCategory);
-
+  const categories = ["All", ...new Set(projects.map(project => project.category))];
+  const category = categories.includes(activeCategory) ? activeCategory : "All";
+  const visible = category === "All" ? projects : projects.filter(project => project.category === category);
   return (
-    <section id="projects" className="py-12">
-      {/* Header with Filters */}
-      <div className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <h2 className="font-headline-md text-3xl font-bold tracking-tight text-on-surface flex items-center gap-3">
-          <Terminal className="text-primary w-7 h-7" />
-          <DecryptedText text="Featured Projects" animateOn="view" speed={35} />
-        </h2>
-
-        {/* Category Filters */}
-        <div className="flex flex-wrap gap-2.5">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={`px-4 py-1.5 rounded-full text-xs font-semibold font-code-sm border transition-all duration-300 cursor-pointer ${
-                activeCategory === category
-                  ? "bg-primary text-on-primary border-primary hover:bg-primary/90"
-                  : "bg-surface-container/20 text-on-surface-variant border-outline-variant/60 hover:border-primary/50 hover:text-primary"
-              }`}
-              aria-label={`Filter projects by ${category}`}
-            >
-              {category}
-            </button>
-          ))}
+    <section id="projects" className="py-6 md:py-10" aria-labelledby="projects-title">
+      <div className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-center">
+        <h2 id="projects-title" className="flex items-center gap-3 font-headline-md text-2xl font-bold tracking-tight md:text-3xl"><Terminal className="h-6 w-6 shrink-0 text-primary-text" aria-hidden="true" />Featured Projects</h2>
+        <div className="flex flex-wrap gap-2" aria-label="Project filters">
+          {categories.map(item => <button type="button" key={item} onClick={() => setActiveCategory(item)} aria-label={`Filter projects by ${item}`} aria-pressed={category === item} className={`min-h-11 rounded-full border px-4 text-xs font-semibold transition-colors ${category === item ? "border-primary bg-primary text-on-primary" : "border-outline-variant bg-surface-container-low text-on-surface-variant hover:border-primary-text"}`}>{item}</button>)}
         </div>
       </div>
-
-      {/* Grid container */}
-      <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProjects.map((project) => (
-          <motion.div
-            layout
-            key={project.title}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            whileHover={{ y: -6, scale: 1.015 }}
-            transition={{ duration: 0.3 }}
-            className="h-full"
-          >
-            <SpotlightCard className="h-full flex flex-col group hover:border-primary hover-glow-primary-sm transition-colors duration-300">
-              {/* Terminal Card Header */}
-              <div className="px-4 py-3 border-b border-outline-variant bg-surface-container/30 flex items-center justify-between select-none">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-error/70 group-hover:bg-error" />
-                  <div className="w-3 h-3 rounded-full bg-tertiary-container/70 group-hover:bg-tertiary-container" />
-                  <div className="w-3 h-3 rounded-full bg-secondary-container/70 group-hover:bg-secondary-container" />
-                  <span className="font-code-sm text-xs text-on-surface-variant ml-2 flex items-center gap-1">
-                    <Folder className="w-3.5 h-3.5 text-primary/70 group-hover:text-primary" />
-                    {project.filename}
-                  </span>
+      <p className="sr-only" role="status">{visible.length} projects shown</p>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {visible.map(project => {
+          const github = externalUrl(project.githubUrl);
+          const live = externalUrl(project.liveUrl);
+          const href = "/projects/" + projectSlug(project);
+          return (
+            <SpotlightCard key={projectSlug(project)} className="flex h-full flex-col">
+              <div className="flex min-h-14 items-center justify-between gap-2 border-b border-outline-variant px-4 py-2">
+                <div className="flex min-w-0 items-center gap-2 text-xs text-on-surface-variant">
+                  <Folder className="h-4 w-4 shrink-0 text-primary-text" aria-hidden="true" /><span className="break-all font-code-sm">{project.filename}</span>
                 </div>
-
-                {/* Action Links */}
-                <div className="flex items-center gap-3">
-                  {project.githubUrl && (
-                    <a
-                      href={project.githubUrl}
-                      className="text-on-surface-variant hover:text-primary transition-colors duration-200"
-                      title="View GitHub Repository"
-                      aria-label={`View GitHub repository for ${project.title}`}
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-                        <path d="M9 18c-4.51 2-5-2-7-2" />
-                      </svg>
-                    </a>
-                  )}
-                  {project.liveUrl && (
-                    <a
-                      href={project.liveUrl}
-                      className="text-on-surface-variant hover:text-secondary transition-colors duration-200"
-                      title="View Live Demo"
-                      aria-label={`View live demo for ${project.title}`}
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  )}
+                <div className="flex shrink-0">
+                  {github && <a href={github} aria-label={`View GitHub repository for ${project.title}`} className="inline-flex h-11 w-11 items-center justify-center text-on-surface-variant hover:text-primary-text"><BrandIcon name="GitHub" className="h-5 w-5" /></a>}
+                  {live && <a href={live} aria-label={`View live demo for ${project.title}`} className="inline-flex h-11 w-11 items-center justify-center text-on-surface-variant hover:text-primary-text"><ExternalLink className="h-5 w-5" aria-hidden="true" /></a>}
                 </div>
               </div>
-
-              {/* Card Body */}
-              <div className="p-6 flex flex-col flex-grow">
-                <h3 className="font-label-md text-lg font-semibold tracking-tight text-primary mb-3 group-hover:text-primary-fixed-dim transition-colors">
-                  {project.title}
-                </h3>
-                <p className="font-body-md text-sm text-on-surface-variant leading-relaxed mb-6 flex-grow">
-                  {project.description}
-                </p>
-
-                {/* Tags / Badges */}
-                <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-outline-variant/30">
-                  {project.tags.map((tag, tagIdx) => (
-                    <span
-                      key={tagIdx}
-                      className="inline-flex items-center rounded-md border border-outline-variant/60 px-2.5 py-0.5 text-xs font-semibold text-on-surface-variant bg-surface-container/20 group-hover:border-primary/40 transition-colors"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+              {externalUrl(project.imageUrl) && <Link href={href} className="relative block aspect-video overflow-hidden border-b border-outline-variant"><Image src={externalUrl(project.imageUrl)!} alt={project.imageAlt || project.title} fill unoptimized sizes="(min-width: 1024px) 360px, (min-width: 768px) 45vw, 90vw" className="object-cover" /></Link>}
+              <div className="flex flex-1 flex-col p-5">
+                <h3 className="mb-3 text-lg font-semibold tracking-tight text-primary-text"><Link href={href} className="hover:underline">{project.title}</Link></h3>
+                <p className="mb-5 flex-1 text-sm leading-relaxed text-on-surface-variant">{project.description}</p>
+                <div className="mb-4 flex flex-wrap gap-2">{project.tags.map(tag => <span key={tag} className="rounded-md border border-outline-variant px-2 py-1 text-xs text-on-surface-variant">{tag}</span>)}</div>
+                <Link href={href} className="inline-flex min-h-11 items-center gap-2 border-t border-outline-variant/50 pt-3 text-sm font-semibold text-primary-text" aria-label={`Read project overview for ${project.title}`}>Project overview<ArrowUpRight className="h-4 w-4" aria-hidden="true" /></Link>
               </div>
             </SpotlightCard>
-          </motion.div>
-        ))}
-      </motion.div>
+          );
+        })}
+      </div>
+      {visible.length === 0 && <p className="py-8 text-on-surface-variant">No projects in this category yet.</p>}
     </section>
   );
 }

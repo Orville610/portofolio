@@ -1,39 +1,11 @@
 "use client";
 
-import React from "react";
 import { usePortfolio } from "@/context/PortfolioContext";
 
 export default function Marquee() {
-  const { portfolioData } = usePortfolio();
-  const { skills } = portfolioData;
-
-  return (
-    <section className="border-y border-outline-variant py-4 bg-transparent overflow-hidden relative w-full my-6">
-      {/* Left/Right fading gradients */}
-      <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-
-      {/* Infinite scrolling container */}
-      <div className="flex w-max">
-        {/* First Group */}
-        <div className="marquee-content gap-8 font-code-sm text-sm text-on-surface-variant whitespace-nowrap pr-8">
-          {skills.map((skill, index) => (
-            <span key={`group1-${index}`} className="flex items-center gap-2">
-              <span className="text-primary font-semibold select-none">$</span>
-              {skill}
-            </span>
-          ))}
-        </div>
-        {/* Duplicate Group for Seamless Looping */}
-        <div className="marquee-content gap-8 font-code-sm text-sm text-on-surface-variant whitespace-nowrap pr-8" aria-hidden="true">
-          {skills.map((skill, index) => (
-            <span key={`group2-${index}`} className="flex items-center gap-2">
-              <span className="text-primary font-semibold select-none">$</span>
-              {skill}
-            </span>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  const { portfolioData: { skills } } = usePortfolio();
+  return <section id="skills" className="py-6 md:py-10" aria-labelledby="skills-title">
+    <h2 id="skills-title" className="mb-6 font-headline-md text-2xl font-bold md:text-3xl">Tools I work with</h2>
+    <ul className="flex flex-wrap gap-3">{skills.map(skill => <li key={skill} className="rounded-md border border-outline-variant bg-surface-container-low/60 px-3 py-2 font-code-sm text-sm text-on-surface-variant"><span className="mr-2 text-primary-text" aria-hidden="true">$</span>{skill}</li>)}</ul>
+  </section>;
 }

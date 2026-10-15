@@ -3,7 +3,7 @@
     "firstName": "Orville Giovanni",
     "lastName": "Sambono",
     "title": "Software Engineer",
-    "description": "A fresh Software Engineering graduate based in Makassar, passionate about self-hosted infrastructure, advanced networking, and web development. Engineering robust solutions from bare metal to the cloud."
+    "description": "Software engineering graduate in Makassar building web applications, self-hosted Linux infrastructure, and encrypted private networks."
   },
   "skills": [
     "Linux (Armbian)",
@@ -47,25 +47,33 @@
       "filename": "infra.sh",
       "title": "Self-Hosted Cloud Infrastructure",
       "description": "Designed and deployed a robust home-lab environment utilizing Docker and CasaOS on Armbian Linux. Implemented Nextcloud for secure, private data storage and sync across devices.",
-      "tags": ["Docker", "CasaOS", "Armbian"],
-      "githubUrl": "#",
+      "tags": [
+        "Docker",
+        "CasaOS",
+        "Armbian"
+      ],
       "category": "Docker"
     },
     {
       "filename": "network.conf",
       "title": "Distributed Database Networking",
       "description": "Engineered a secure, zero-trust mesh network using Tailscale to link geographically distributed MariaDB instances, ensuring high availability and encrypted internal traffic without exposing ports.",
-      "tags": ["Tailscale", "MariaDB", "ZeroTier"],
-      "githubUrl": "#",
+      "tags": [
+        "Tailscale",
+        "MariaDB",
+        "ZeroTier"
+      ],
       "category": "Networking"
     },
     {
       "filename": "index.php",
       "title": "Exarabia Product Innovation",
       "description": "Developed a full-stack web application focusing on clean UI/UX principles to showcase product innovations. Integrated backend PHP logic with a responsive, modern frontend.",
-      "tags": ["PHP", "HTML/CSS", "UI/UX"],
-      "githubUrl": "#",
-      "liveUrl": "#",
+      "tags": [
+        "PHP",
+        "HTML/CSS",
+        "UI/UX"
+      ],
       "category": "Web Dev"
     }
   ],
@@ -78,5 +86,14 @@
       "title": "Public Speaking & Leadership Workshops",
       "desc": "Communication and Team Management Certification"
     }
-  ]
+  ],
+  "settings": {
+    "email": "orville@rville.dev"
+  },
+  "achievement": {
+    "title": "National Finalist — Cloud Computing",
+    "year": "2024",
+    "organization": "Ministry of Education",
+    "description": "Competed in cloud architecture design at national level."
+  }
 }

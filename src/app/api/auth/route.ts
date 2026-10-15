@@ -1,16 +1,35 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { createSession, deleteSession, isAdmin, limitLoginAttempts, passwordMatches, requireAdminConfiguration, SESSION_COOKIE, SESSION_TTL, sessionCookieOptions } from "@/lib/server/auth";
+import { errorResponse, HttpError, noStore, readJson, requireSameOrigin } from "@/lib/server/http";
 
-export async function POST(request: Request) {
+export const dynamic = "force-dynamic";
+
+export async function GET(request: NextRequest) {
+  try { return NextResponse.json({ authenticated: await isAdmin(request) }, { headers: noStore }); }
+  catch (error) { return errorResponse(error); }
+}
+export async function POST(request: NextRequest) {
   try {
-    const { password } = await request.json();
-    const correctPassword = process.env.ADMIN_PASSWORD || "admin";
-
-    if (password === correctPassword) {
-      return NextResponse.json({ success: true });
+    requireSameOrigin(request);
+    const correctPassword = requireAdminConfiguration();
+    await limitLoginAttempts(request);
+    const data = await readJson(request, 2048);
+    if (!data || typeof data !== "object" || !("password" in data) || typeof data.password !== "string" || data.password.length > 1024) {
+      throw new HttpError(400, "Enter a valid password.");
     }
-
-    return NextResponse.json({ success: false }, { status: 401 });
-  } catch (error) {
-    return NextResponse.json({ success: false, error: "Invalid request" }, { status: 400 });
-  }
+    if (!passwordMatches(data.password, correctPassword)) throw new HttpError(401, "Incorrect password.");
+    const token = await createSession(correctPassword);
+    const response = NextResponse.json({ success: true }, { headers: noStore });
+    response.cookies.set(SESSION_COOKIE, token, { ...sessionCookieOptions, maxAge: SESSION_TTL });
+    return response;
+  } catch (error) { return errorResponse(error); }
+}
+export async function DELETE(request: NextRequest) {
+  try {
+    requireSameOrigin(request);
+    await deleteSession(request);
+    const response = NextResponse.json({ success: true }, { headers: noStore });
+    response.cookies.set(SESSION_COOKIE, "", { ...sessionCookieOptions, maxAge: 0 });
+    return response;
+  } catch (error) { return errorResponse(error); }
 }

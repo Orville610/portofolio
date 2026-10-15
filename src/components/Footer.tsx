@@ -1,66 +1,13 @@
-"use client";
+import BrandIcon from "./BrandIcon";
+import { site } from "@/lib/site";
 
-import React from "react";
-
+const socials = [{ title: "GitHub", href: site.github }, { title: "LinkedIn", href: site.linkedin }, { title: "Instagram", href: site.instagram }] as const;
 export default function Footer() {
-  return (
-    <footer className="w-full border-t border-outline-variant bg-background mt-24">
-      <div className="container flex flex-col md:flex-row justify-between items-center px-4 md:px-8 py-6 max-w-max-width mx-auto gap-4">
-        {/* Footer Brand Logo */}
-        <div className="font-headline-md text-lg font-bold tracking-tight text-on-surface">
-          RVILLE
-        </div>
-
-        {/* Footer Status / Copyright */}
-        <div className="font-code-sm text-xs md:text-sm text-on-surface-variant text-muted-foreground select-none">
-          &copy; {new Date().getFullYear()} RVILLE | CLOUD_INFRA_V1.0
-        </div>
-
-        {/* Social Links */}
-        <div className="flex gap-4">
-          <a
-            className="p-2 rounded-full border border-outline-variant/60 text-muted-foreground hover:text-primary hover:border-primary hover:bg-primary/5 transition-all duration-300 cursor-pointer"
-            href="https://github.com/Orville610"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="GitHub"
-            aria-label="GitHub"
-          >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-              <path d="M9 18c-4.51 2-5-2-7-2" />
-            </svg>
-          </a>
-          <a
-            className="p-2 rounded-full border border-outline-variant/60 text-muted-foreground hover:text-primary hover:border-primary hover:bg-primary/5 transition-all duration-300 cursor-pointer"
-            href="https://www.linkedin.com/in/orvillegiovanni/"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="LinkedIn"
-            aria-label="LinkedIn"
-          >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-              <rect width="4" height="12" x="2" y="9" />
-              <circle cx="4" cy="4" r="2" />
-            </svg>
-          </a>
-          <a
-            className="p-2 rounded-full border border-outline-variant/60 text-muted-foreground hover:text-primary hover:border-primary hover:bg-primary/5 transition-all duration-300 cursor-pointer"
-            href="https://instagram.com/heyy.orville"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Instagram"
-            aria-label="Instagram"
-          >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-            </svg>
-          </a>
-        </div>
-      </div>
-    </footer>
-  );
+  return <footer className="mt-10 w-full border-t border-outline-variant bg-background print:hidden">
+    <div className="container mx-auto flex max-w-max-width flex-col items-center justify-between gap-4 px-4 py-6 md:flex-row md:px-8">
+      <p className="font-headline-md font-bold">RVILLE</p>
+      <p className="text-center font-code-sm text-xs text-on-surface-variant">© {new Date().getFullYear()} {site.name}</p>
+      <nav aria-label="Social links" className="flex gap-2">{socials.map(({ title, href }) => <a key={title} href={href} target="_blank" rel="noopener noreferrer" aria-label={title} className="flex h-11 w-11 items-center justify-center rounded-full border border-outline-variant text-on-surface-variant hover:text-primary-text"><BrandIcon name={title} className="h-5 w-5" /></a>)}</nav>
+    </div>
+  </footer>;
 }

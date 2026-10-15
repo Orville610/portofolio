@@ -1,521 +1,132 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { Terminal as TerminalIcon, Play, RefreshCw } from "lucide-react";
-import confetti from "canvas-confetti";
+import { useEffect, useRef, useState } from "react";
+import { Play, RotateCcw } from "lucide-react";
 import { usePortfolio } from "@/context/PortfolioContext";
+import { site } from "@/lib/site";
 
-interface LogEntry {
-  type: "input" | "output";
-  text: string;
-  isHtml?: boolean;
-}
+interface LogEntry { type: "input" | "output"; text: string }
+const commands = ["help", "about", "skills", "experience", "projects", "certs", "contact", "neofetch", "confetti", "admin", "sudo", "weather", "matrix", "speedtest", "clear"];
 
 export default function Terminal() {
-  const { setIsAdmin, setShowAdminPanel } = usePortfolio();
-  const [currentUser, setCurrentUser] = useState("guest");
-  const [isPromptingPassword, setIsPromptingPassword] = useState(false);
-  const [history, setHistory] = useState<LogEntry[]>([
-    { type: "output", text: "Welcome to Rville Cloud Terminal v1.0.0" },
-    { type: "output", text: "Type 'help' to see list of available commands." },
-    { type: "output", text: "" },
-  ]);
+  const { portfolioData, isAdmin, login, setShowAdminPanel } = usePortfolio();
+  const [user, setUser] = useState("guest");
+  const [passwordPrompt, setPasswordPrompt] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [input, setInput] = useState("");
+  const [history, setHistory] = useState<LogEntry[]>([{ type: "output", text: "Welcome to Rville Cloud Terminal. Type 'help' to explore my work." }]);
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
-  const terminalContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const focusInput = () => {
-    // Only focus if the user is not actively selecting text to allow copy-pasting
-    if (!window.getSelection()?.toString()) {
-      inputRef.current?.focus();
-    }
-  };
-
+  const outputRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (terminalContainerRef.current) {
-      terminalContainerRef.current.scrollTo({
-        top: terminalContainerRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }
+    const output = outputRef.current;
+    if (output) output.scrollTop = output.scrollHeight;
   }, [history]);
+  const append = (...entries: LogEntry[]) => setHistory(previous => [...previous, ...entries].slice(-200));
+  const output = (text: string) => append({ type: "output", text });
 
-  const verifyPassword = async (pwd: string) => {
-    // Show masked input (dots) to mock typing
-    setHistory((prev) => [
-      ...prev,
-      { type: "input", text: `${currentUser}@rville-cloud:~$ ` + "•".repeat(Math.max(1, pwd.length)) }
-    ]);
-
-    try {
-      const res = await fetch("/api/auth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ password: pwd }),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        setHistory((prev) => [
-          ...prev,
-          { 
-            type: "output", 
-            text: "Access Granted. Initializing admin context...\nSuccessfully logged in! Opening Admin Panel..." 
-          }
-        ]);
-        setIsAdmin(true);
-        setTimeout(() => {
-          setShowAdminPanel(true);
-        }, 500);
-      } else {
-        setHistory((prev) => [
-          ...prev,
-          { type: "output", text: "sudo: 1 incorrect password attempt. Access denied." }
-        ]);
-      }
-    } catch (err) {
-      setHistory((prev) => [
-        ...prev,
-        { type: "output", text: "sudo: authentication service error." }
-      ]);
-    }
-
-    setIsPromptingPassword(false);
+  async function runCommand(raw: string) {
+    if (busy) return;
     setInput("");
-  };
-
-  const handleCommand = (cmd: string) => {
-    if (isPromptingPassword) {
-      verifyPassword(cmd);
+    if (passwordPrompt) {
+      append({ type: "input", text: "[password entered]" });
+      setBusy(true);
+      const result = await login(raw);
+      setBusy(false);
+      setPasswordPrompt(false);
+      output(result.success ? "Signed in. Opening the admin panel…" : result.message);
+      if (result.success) setShowAdminPanel(true);
       return;
     }
-    const trimmedCmd = cmd.trim().toLowerCase();
-    const newHistory = [...history, { type: "input" as const, text: `${currentUser}@rville-cloud:~$ ${cmd}` }];
-
-    if (trimmedCmd === "") {
-      setHistory(newHistory);
+    const command = raw.trim().toLowerCase();
+    append({ type: "input", text: `${user}@rville:~$ ${raw}` });
+    if (!command) return;
+    setCommandHistory(previous => previous.at(-1) === command ? previous : [...previous, command].slice(-100));
+    setHistoryIndex(-1);
+    if (command === "sudo rville") { setUser("rville"); output("Switched to the rville terminal profile. This does not grant admin access."); return; }
+    if (command === "admin" || command === "sudo su") {
+      if (command === "sudo su" && user === "guest") { output("Permission denied. Use 'sudo rville' first, or 'admin' to sign in."); return; }
+      if (isAdmin) { setShowAdminPanel(true); return; }
+      output("Admin password:");
+      setPasswordPrompt(true);
       return;
     }
+    switch (command) {
+      case "help": output(`Available commands:
+about       - About Orville
+skills      - Current tools and skills
+experience  - Community and leadership experience
+projects    - Featured projects
+certs       - Learning and certifications
+contact     - Contact details
+neofetch    - Portfolio summary (simulation)
+confetti    - Celebrate
+admin       - Sign in to edit the portfolio
+sudo        - Terminal profile commands
+weather     - Sample weather output (not live)
+matrix      - A small terminal easter egg
+speedtest   - Simulated speed test (not a measurement)
+clear       - Clear the terminal
 
-    // Passwordless Switch User (cosmetic)
-    if (trimmedCmd === "sudo rville") {
-      if (currentUser === "guest") {
-        setCurrentUser("rville");
-        setHistory([
-          ...history,
-          { type: "input", text: "guest@rville-cloud:~$ sudo rville" },
-          { type: "output", text: "Successfully switched to user 'rville'." }
-        ]);
-      } else {
-        setHistory([
-          ...history,
-          { type: "input", text: "rville@rville-cloud:~$ sudo rville" },
-          { type: "output", text: "Already logged in as rville." }
-        ]);
-      }
-      setInput("");
-      return;
-    }
-
-    // Sudo Elevation to Admin Panel (requires password)
-    if (trimmedCmd === "sudo su") {
-      if (currentUser === "rville") {
-        setHistory([
-          ...newHistory,
-          { type: "output", text: "[sudo] password for rville: " }
-        ]);
-        setIsPromptingPassword(true);
-      } else {
-        setHistory([
-          ...newHistory,
-          { type: "output", text: "Permission denied. Guest is not in the sudoers file. This incident will be reported." }
-        ]);
-      }
-      setInput("");
-      return;
-    }
-
-    let output: LogEntry[] = [];
-
-    switch (trimmedCmd) {
-      case "help":
-        output = [
-          {
-            type: "output",
-            text: `Available commands:
-  about       - Brief bio about Orville
-  skills      - List core tech skills & tools
-  experience  - View timeline of experience
-  projects    - List featured engineering projects
-  certs       - View professional certifications
-  contact     - Display contact methods
-  neofetch    - Show system details & ASCII art
-  confetti    - Fire a celebration rocket!
-  sudo        - Request superuser privileges
-  weather     - Check local weather in Makassar
-  matrix      - Establish connection to the Matrix
-  speedtest   - Run simulated connection speed test
-  clear       - Clear the screen`,
-          },
-        ];
-        break;
-
-      case "about":
-        output = [
-          {
-            type: "output",
-            text: `Orville Giovanni Sambono
--------------------------
-Fresh Software Engineering graduate based in Makassar, Indonesia.
-Passionate about self-hosted infrastructure, advanced networking, and web development.
-Main goal: Engineering robust solutions from bare metal to the cloud, building resilient systems.`,
-          },
-        ];
-        break;
-
-      case "skills":
-        output = [
-          {
-            type: "output",
-            text: `Core Tech Stack:
-- Infrastructure: Armbian Linux, Docker, CasaOS
-- Networking: Tailscale, ZeroTier, OpenVPN
-- Databases: MariaDB, MySQL, SQLite
-- Frontend/Backend: HTML, CSS, Javascript, PHP, React, Next.js, Node.js
-- Workflow: UI/UX Design, Git, CI/CD, AI Prompting`,
-          },
-        ];
-        break;
-
-      case "experience":
-        output = [
-          {
-            type: "output",
-            text: `Professional Experience & Leadership:
-- 2025: Cloud Computing Community Leader
-  - Orchestrated workshops on Docker, Linux admin, self-hosting.
-- 2025: Coordinator at Christosel
-  - Handled logistics and technical event operations.
-- 2024 - 2025: Board Member at OSIS
-  - Student council governance and administrative scripting.`,
-          },
-        ];
-        break;
-
-      case "projects":
-        output = [
-          {
-            type: "output",
-            text: `Featured Engineering Projects:
-1. Self-Hosted Cloud Infrastructure (Docker, CasaOS, Nextcloud on Armbian Linux)
-2. Distributed Database Networking (Tailscale mesh networking for MariaDB instances)
-3. Exarabia Product Innovation (Full-stack PHP/CSS product catalog application)`,
-          },
-        ];
-        break;
-
-      case "certs":
-        output = [
-          {
-            type: "output",
-            text: `Certifications:
-- Digiup Telkom Indonesia: Advanced Cloud Infrastructure & Networking
-- Public Speaking & Leadership Workshops: Communication & Team Management`,
-          },
-        ];
-        break;
-
-      case "contact":
-        output = [
-          {
-            type: "output",
-            text: `Connection Details:
-- Email    : orville@rville.site
-- Github   : github.com/Orville610
-- Instagram: instagram.com/heyy.orville`,
-          },
-        ];
-        break;
-
-      case "neofetch":
-        output = [
-          {
-            type: "output",
-            isHtml: true,
-            text: `<div class="flex gap-4 font-mono leading-tight">
-  <div class="text-primary font-bold hidden sm:block">
-    .---.      
-   (     )     
-  (  .---. )   
-  ( (     ) )  
-   (  ---  )   
-    '---'      
-  </div>
-  <div>
-    <span class="text-primary font-bold">guest</span>@<span class="text-secondary font-bold">rville-cloud</span>
-    <br/>------------------
-    <br/><span class="text-primary">OS:</span> Armbian Linux v25.04 (Bullseye)
-    <br/><span class="text-primary">Kernel:</span> 6.1.28-selfhosted
-    <br/><span class="text-primary">Uptime:</span> 365d 4h 22m (ONLINE)
-    <br/><span class="text-primary">Shell:</span> NextjsTerminal/1.0
-    <br/><span class="text-primary">Projects:</span> 3 Active (Docker base)
-    <br/><span class="text-primary">Location:</span> Makassar, Indonesia
-    <br/><span class="text-primary">Status:</span> Cloud computing finalist 🏆
-  </div>
-</div>`,
-          },
-        ];
-        break;
-
+Use ↑/↓ for history and Ctrl+Space for autocomplete. Tab moves between controls.`); break;
+      case "about": output(`${portfolioData.hero.firstName} ${portfolioData.hero.lastName}\n${portfolioData.hero.title}\n${portfolioData.hero.description}`); break;
+      case "skills": output("Core Tech Stack:\n" + portfolioData.skills.map(skill => "- " + skill).join("\n")); break;
+      case "experience": output("Experience & Leadership:\n" + portfolioData.experience.map(item => `${item.year}: ${item.role} — ${item.organization}\n${item.description}`).join("\n\n")); break;
+      case "projects": output("Featured Engineering Projects:\n" + portfolioData.projects.map((project, index) => `${index + 1}. ${project.title}\n${project.description}`).join("\n\n")); break;
+      case "certs": output("Certifications:\n" + portfolioData.certifications.map(cert => `${cert.title}\n${cert.desc}`).join("\n\n")); break;
+      case "contact": output(`Connection Details:\nEmail: ${portfolioData.settings.email}\nGitHub: ${site.github}\nLinkedIn: ${site.linkedin}`); break;
+      case "neofetch": output(`RVILLE — portfolio simulation\n-----------------------------\nFocus: Web development, Linux, cloud\nProjects: ${portfolioData.projects.length}\nLocation: Makassar, Indonesia\nKernel: Browser-based simulation; no remote shell\nWebsite: ${site.url}`); break;
       case "confetti":
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ["#adc6ff", "#4edea3", "#ffb786"],
-        });
-        output = [
-          {
-            type: "output",
-            text: "🎉 System Celebration Executed! Launching confetti...",
-          },
-        ];
-        break;
-
-      case "sudo":
-        if (currentUser === "guest") {
-          output = [
-            {
-              type: "output",
-              text: "Permission denied. Guest is not in the sudoers file. This incident will be reported.",
-            },
-          ];
-        } else {
-          output = [
-            {
-              type: "output",
-              text: "usage: sudo rville | sudo su",
-            },
-          ];
+        if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          try { const { default: confetti } = await import("canvas-confetti"); confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 }, disableForReducedMotion: true }); }
+          catch { output("Celebration ready 🎉"); }
         }
-        break;
-
-      case "weather":
-        output = [
-          {
-            type: "output",
-            text: "Location: Makassar, Indonesia\nWeather : 31°C - Partly Cloudy\nWind    : 12 km/h E\nHumidity: 70%\nNotice  : Perfect temperature for self-hosting on bare-metal! ⚡",
-          },
-        ];
-        break;
-
-      case "matrix":
-        output = [
-          {
-            type: "output",
-            text: "Establishing connection to the Matrix...\n101001101011010010101101001010100101101\n011010010110100101011011010110100101010\n101011010110100101011011010010100101101\n011011010110100101011010010101001011010\n101011010110100101011010010100100101101\n\nSystem: Wake up, Neo...",
-          },
-        ];
-        break;
-
-      case "speedtest":
-        // Run simulated multi-step speedtest
-        setHistory(newHistory);
-        const speedtestLog = [
-          { type: "output" as const, text: "Testing connection speed to rville-cloud-node-01 (Makassar, ID)..." }
-        ];
-        setHistory((prev) => [...prev, ...speedtestLog]);
-
-        const runTest = (step: number) => {
-          setTimeout(() => {
-            if (step === 1) {
-              setHistory((prev) => [...prev, { type: "output" as const, text: "Connecting to server... Done (Latency: 4ms)" }]);
-              runTest(2);
-            } else if (step === 2) {
-              setHistory((prev) => [...prev, { type: "output" as const, text: "Testing download: [==========          ] 50% (450 Mbps)" }]);
-              runTest(3);
-            } else if (step === 3) {
-              setHistory((prev) => [...prev, { type: "output" as const, text: "Testing download: [====================] 100% (945 Mbps)" }]);
-              runTest(4);
-            } else if (step === 4) {
-              setHistory((prev) => [...prev, { type: "output" as const, text: "Testing upload  : [==========          ] 50% (210 Mbps)" }]);
-              runTest(5);
-            } else if (step === 5) {
-              setHistory((prev) => [
-                ...prev,
-                { type: "output" as const, text: "Testing upload  : [====================] 100% (480 Mbps)" },
-                {
-                  type: "output" as const,
-                  text: "\nSpeedtest completed successfully!\n---------------------------------\nDownload: 945 Mbps\nUpload  : 480 Mbps\nLatency : 4 ms (Stable Tailscale Zero-Trust Link) ⚡"
-                }
-              ]);
-            }
-          }, 450);
-        };
-        
-        runTest(1);
-        
-        if (cmd.trim()) {
-          setCommandHistory((prev) => {
-            if (prev.length > 0 && prev[prev.length - 1] === cmd) return prev;
-            return [...prev, cmd];
-          });
-        }
-        setHistoryIndex(-1);
-        setInput("");
-        return;
-
-      case "clear":
-        setHistory([]);
-        setInput("");
-        return;
-
-      default:
-        output = [
-          {
-            type: "output",
-            text: `Command '${cmd}' not found. Type 'help' for available commands.`,
-          },
-        ];
-        break;
+        output("🎉 Thanks for exploring my work!"); break;
+      case "weather": output("Sample weather — not live data\nMakassar: 31°C, partly cloudy.\nThis is a terminal demonstration."); break;
+      case "speedtest": output("SIMULATION — no network speed was measured.\nExample download: 945 Mbps\nExample upload: 480 Mbps\nExample latency: 4 ms"); break;
+      case "matrix": output("Wake up, Neo…\n10100110 01011010 10110100"); break;
+      case "sudo": output("usage: sudo rville | sudo su"); break;
+      case "clear": setHistory([]); break;
+      default: output(`Command '${raw}' not found. Type 'help' for available commands.`);
     }
-
-    if (cmd.trim()) {
-      setCommandHistory((prev) => {
-        // Prevent duplicate consecutive entries in history
-        if (prev.length > 0 && prev[prev.length - 1] === cmd) {
-          return prev;
-        }
-        return [...prev, cmd];
-      });
-    }
-    setHistoryIndex(-1); // Reset index
-    setHistory([...newHistory, ...output]);
-    setInput("");
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleCommand(input);
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      if (commandHistory.length === 0) return;
-      const newIndex = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1);
-      setHistoryIndex(newIndex);
-      setInput(commandHistory[newIndex]);
-    } else if (e.key === "ArrowDown") {
-      e.preventDefault();
-      if (historyIndex === -1) return;
-      if (historyIndex === commandHistory.length - 1) {
-        setHistoryIndex(-1);
-        setInput("");
-      } else {
-        const newIndex = historyIndex + 1;
-        setHistoryIndex(newIndex);
-        setInput(commandHistory[newIndex]);
-      }
-    } else if (e.key === "Tab") {
-      e.preventDefault();
-      const currentInput = input.trim().toLowerCase();
-      if (!currentInput) return;
-      const availableCommands = [
-        "help",
-        "about",
-        "skills",
-        "experience",
-        "projects",
-        "certs",
-        "contact",
-        "neofetch",
-        "confetti",
-        "sudo",
-        "weather",
-        "matrix",
-        "speedtest",
-        "clear"
-      ];
-      const match = availableCommands.find((c) => c.startsWith(currentInput));
-      if (match) {
-        setInput(match);
-      }
-    }
-  };
-
-  return (
-    <section className="w-full max-w-4xl mx-auto my-12" onClick={focusInput}>
-      <div className="rounded-xl border border-outline-variant bg-surface-container-lowest/80 text-on-surface shadow-lg overflow-hidden terminal-glow-hover transition-all duration-300">
-        {/* Terminal Header */}
-        <div className="px-4 py-3 border-b border-outline-variant bg-surface-container/40 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-error cursor-pointer hover:bg-error/80" onClick={() => setHistory([])} title="Clear terminal" />
-            <div className="w-3 h-3 rounded-full bg-tertiary-container" />
-            <div className="w-3 h-3 rounded-full bg-secondary-container" />
-            <span className="font-code-sm text-xs text-on-surface-variant ml-2 select-none flex items-center gap-1.5">
-              <TerminalIcon className="w-3.5 h-3.5 text-primary" />
-              {currentUser}@rville-cloud: ~ (interactive)
-            </span>
-          </div>
-          <button
-            onClick={() => handleCommand("neofetch")}
-            className="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 text-xs font-code-sm"
-            aria-label="Run neofetch profile summary command"
-            title="Run neofetch"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-            neofetch
-          </button>
-        </div>
-
-        {/* Terminal Content Screen */}
-        <div
-          ref={terminalContainerRef}
-          className="p-5 font-mono text-sm leading-relaxed min-h-[300px] max-h-[400px] overflow-y-auto bg-surface/90 scrollbar-hide"
-        >
-          {history.map((entry, idx) => (
-            <div key={idx} className="mb-2">
-              {entry.type === "input" ? (
-                <div className="text-secondary font-semibold">{entry.text}</div>
-              ) : entry.isHtml ? (
-                <div dangerouslySetInnerHTML={{ __html: entry.text }} />
-              ) : (
-                <pre className="whitespace-pre-wrap text-on-surface-variant">{entry.text}</pre>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Terminal Input Bar */}
-        <div className="px-5 py-3 border-t border-outline-variant bg-surface-container-low/40 flex items-center gap-2">
-          <span className="text-secondary font-semibold font-mono select-none hidden sm:inline">{currentUser}@rville-cloud:~$</span>
-          <span className="text-secondary font-semibold font-mono select-none inline sm:hidden">{currentUser}:~$</span>
-          <input
-            ref={inputRef}
-            type={isPromptingPassword ? "password" : "text"}
-            className="flex-grow bg-transparent border-none outline-none focus:ring-0 p-0 text-primary font-mono text-sm caret-primary"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Type 'help' and press Enter..."
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            spellCheck="false"
-          />
-          <button
-            onClick={() => handleCommand(input)}
-            className="text-on-surface-variant hover:text-primary transition-colors p-1"
-            title="Run command"
-            aria-label="Run command"
-          >
-            <Play className="w-4 h-4" />
-          </button>
-        </div>
+  }
+  return <section className="overflow-hidden border-t border-outline-variant" aria-label="Interactive terminal">
+    <div className="flex flex-wrap items-center justify-between gap-2 bg-surface-container-low px-4 py-3">
+      <p className="font-code-sm text-xs text-on-surface-variant">{user}@rville:~ — local simulation</p>
+      <div className="flex gap-2">
+        {isAdmin && <button type="button" onClick={() => setShowAdminPanel(true)} className="min-h-11 px-2 text-xs font-semibold text-primary-text">Open admin</button>}
+        <button type="button" onClick={() => setHistory([])} className="inline-flex min-h-11 items-center gap-2 px-2 text-xs text-on-surface-variant" aria-label="Clear terminal"><RotateCcw className="h-4 w-4" aria-hidden="true" />Clear</button>
       </div>
-    </section>
-  );
+    </div>
+    <div ref={outputRef} role="log" aria-label="Terminal output" aria-live="polite" className="max-h-80 min-h-48 overflow-y-auto bg-surface-container-lowest p-4 font-code-sm text-sm leading-relaxed">
+      {history.map((entry, index) => <pre key={index} className={`mb-3 whitespace-pre-wrap break-words ${entry.type === "input" ? "text-primary-text" : "text-on-surface-variant"}`}>{entry.text}</pre>)}
+    </div>
+    <div className="flex items-center gap-2 border-t border-outline-variant px-4 py-2">
+      <label htmlFor="terminal-input" className="sr-only">{passwordPrompt ? "Admin password" : "Terminal command"}</label>
+      <span className="shrink-0 font-code-sm text-xs text-secondary" aria-hidden="true">{passwordPrompt ? "Password:" : ">_"}</span>
+      <input id="terminal-input" ref={inputRef} type={passwordPrompt ? "password" : "text"} disabled={busy} value={input} onChange={event => setInput(event.target.value)}
+        onKeyDown={event => {
+          if (event.key === "Enter") { event.preventDefault(); void runCommand(input); }
+          else if (event.key === "Escape" && passwordPrompt) { setPasswordPrompt(false); setInput(""); }
+          else if (!passwordPrompt && event.key === "ArrowUp" && commandHistory.length) {
+            event.preventDefault();
+            const index = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1);
+            setHistoryIndex(index); setInput(commandHistory[index]);
+          } else if (!passwordPrompt && event.key === "ArrowDown") {
+            event.preventDefault();
+            const index = historyIndex < 0 || historyIndex >= commandHistory.length - 1 ? -1 : historyIndex + 1;
+            setHistoryIndex(index); setInput(index === -1 ? "" : commandHistory[index]);
+          } else if (!passwordPrompt && event.ctrlKey && event.code === "Space") {
+            event.preventDefault();
+            const match = commands.find(command => input.trim() && command.startsWith(input.trim().toLowerCase()));
+            if (match) setInput(match);
+          }
+        }}
+        placeholder={passwordPrompt ? "Enter admin password" : "Type 'help' and press Enter..."} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false}
+        className="min-h-11 min-w-0 flex-1 rounded bg-transparent px-2 font-code-sm text-sm text-primary-text outline-offset-2 disabled:opacity-60" />
+      <button type="button" onClick={() => void runCommand(input)} disabled={busy} aria-label="Run command" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-on-surface-variant hover:text-primary-text disabled:opacity-50"><Play className="h-4 w-4" aria-hidden="true" /></button>
+    </div>
+    <p className="px-4 pb-3 text-xs text-on-surface-variant">{busy ? "Signing in…" : "↑/↓ history · Ctrl+Space autocomplete · Tab moves focus"}</p>
+  </section>;
 }

@@ -1,13 +1,6 @@
-import { MetadataRoute } from "next";
-
-export const dynamic = "force-static";
+import type { MetadataRoute } from "next";
+import { site } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
-  return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-    },
-    sitemap: "https://rville.site/sitemap.xml",
-  };
+  return { rules: { userAgent: "*", allow: "/", disallow: ["/api/", "/admin"] }, sitemap: site.url + "/sitemap.xml", host: site.url };
 }

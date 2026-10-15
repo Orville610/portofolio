@@ -1,153 +1,33 @@
-import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
-import "./globals.css";
+import type { Metadata, Viewport } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-export const metadata: Metadata = {
-  title: "Orville Giovanni Sambono | Software Engineer & Linux/Cloud Specialist",
-  description:
-    "Portfolio of Orville Giovanni Sambono, a Software Engineer & Linux & Cloud Enthusiast in Makassar. Specialized in docker deployments, network engineering (Tailscale, zero-trust), and robust cloud/bare-metal infrastructure solutions.",
-  keywords: [
-    "Orville Giovanni Sambono",
-    "Software Engineer Portfolio",
-    "Cloud Computing Engineer",
-    "Linux Administration",
-    "Self-Hosted Homelab",
-    "Tailscale Zero Trust Network",
-    "Docker Containerization",
-    "Armbian Linux Developer",
-    "Makassar Web Developer",
-    "Orville Rville Portfolio",
-  ],
-  authors: [{ name: "Orville Giovanni Sambono", url: "https://rville.site" }],
-  creator: "Orville Giovanni Sambono",
-  publisher: "Orville Giovanni Sambono",
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://rville.site",
-    title: "Orville Giovanni Sambono | Software Engineer & Linux/Cloud Specialist",
-    description: "Engineering robust solutions from bare metal to the cloud, self-hosted environments, and distributed networking.",
-    siteName: "Orville Giovanni Sambono Portfolio",
-    images: [
-      {
-        url: "https://rville.site/profile.jpg",
-        width: 800,
-        height: 800,
-        alt: "Orville Giovanni Sambono Portfolio Profile Picture",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Orville Giovanni Sambono | Software & Network Engineer",
-    description: "Engineering robust solutions from bare metal to the cloud, self-hosted environments, and distributed networking.",
-    images: ["https://rville.site/profile.jpg"],
-  },
-  alternates: {
-    canonical: "https://rville.site",
-  },
-  manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-  },
-};
-
-export const viewport = {
-  themeColor: "#0f0f11",
-  colorScheme: "dark" as const,
-};
-
-import PWARegister from "@/components/PWARegister";
 import { Analytics } from "@vercel/analytics/react";
+import PWARegister from "@/components/PWARegister";
+import { site } from "@/lib/site";
+import "./globals.css";
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" className="dark scroll-smooth">
-      <head>
-        {/* JSON-LD Schema.org Structured Data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Person",
-              "name": "Orville Giovanni Sambono",
-              "url": "https://rville.site",
-              "image": "https://rville.site/profile.jpg",
-              "sameAs": [
-                "https://github.com/Orville610",
-                "https://www.linkedin.com/in/orvillegiovanni/",
-                "https://instagram.com/heyy.orville"
-              ],
-              "jobTitle": "Software Engineer",
-              "worksFor": {
-                "@type": "Organization",
-                "name": "Self-Employed"
-              },
-              "description": "Portfolio of Orville Giovanni Sambono, a Software Engineer & Linux & Cloud Enthusiast. Engineering robust solutions from bare metal to the cloud, self-hosted environments, and distributed networking.",
-              "gender": "Male",
-              "nationality": "Indonesian",
-              "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Makassar",
-                "addressRegion": "South Sulawesi",
-                "addressCountry": "ID"
-              },
-              "knowsAbout": [
-                "Software Engineering",
-                "Docker",
-                "Linux Administration",
-                "Cloud Computing",
-                "Tailscale Zero Trust Networking",
-                "Armbian Homelab",
-                "MariaDB",
-                "PHP",
-                "Next.js",
-                "React",
-                "TypeScript",
-                "Web Development"
-              ]
-            })
-          }}
-        />
-      </head>
-      <body
-        className={`${inter.variable} ${jetbrainsMono.variable} bg-background text-on-surface font-body-md antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col`}
-      >
-        <PWARegister />
-        {children}
-        <SpeedInsights />
-        <Analytics />
-      </body>
-    </html>
-  );
+const title = site.name + " | " + site.title;
+export const metadata: Metadata = {
+  metadataBase: new URL(site.url),
+  title: { default: title, template: "%s | " + site.name },
+  description: site.description,
+  authors: [{ name: site.name, url: site.url }],
+  creator: site.name,
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
+  openGraph: { type: "website", locale: "en_US", url: site.url, title, description: site.description, siteName: "Rville Portfolio", images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: site.name + " — Web, Linux & Cloud" }] },
+  twitter: { card: "summary_large_image", title, description: site.description, images: ["/opengraph-image"] },
+  alternates: { canonical: "/" },
+  manifest: "/manifest.json",
+  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "Rville" },
+  icons: { icon: [{ url: "/icon.svg", type: "image/svg+xml" }, { url: "/icons/icon-192.png", type: "image/png" }], shortcut: "/favicon.ico", apple: "/icons/icon-192.png" },
+};
+export const viewport: Viewport = { themeColor: "#0f0f11", colorScheme: "dark" };
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <html lang="en" className="dark">
+    <body className="flex min-h-screen flex-col bg-background font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container">
+      <a href="#main-content" className="skip-link print:hidden">Skip to content</a>
+      {children}
+      <PWARegister />
+      {process.env.VERCEL === "1" && <><SpeedInsights /><Analytics /></>}
+    </body>
+  </html>;
 }

@@ -1,55 +1,33 @@
-import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
+import { getPortfolioData, PORTFOLIO_KEY } from "@/lib/server/portfolio";
+import { isAdmin } from "@/lib/server/auth";
+import { portfolioSchema } from "@/lib/server/schema";
+import { redisCommand } from "@/lib/server/redis";
+import { normalizePortfolio } from "@/lib/portfolio";
+import { errorResponse, HttpError, noStore, readJson, requireSameOrigin } from "@/lib/server/http";
 
-const dataFilePath = path.join(process.cwd(), "src", "data", "portfolio.json");
-export const dynamic = "force-static";
-
-const getLocalData = () => {
-  const fileContents = fs.readFileSync(dataFilePath, "utf8");
-  return JSON.parse(fileContents);
-};
+export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
-  const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
-
-  if (redisUrl && redisToken) {
-    try {
-      const res = await fetch(redisUrl, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${redisToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(["GET", "portfolio_data"]),
-      });
-
-      if (res.ok) {
-        const { result } = await res.json();
-        if (result) {
-          return NextResponse.json(JSON.parse(result));
-        } else {
-          const localData = getLocalData();
-          await fetch(redisUrl, {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${redisToken}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(["SET", "portfolio_data", JSON.stringify(localData)]),
-          });
-          return NextResponse.json(localData);
-        }
-      }
-    } catch (error) {
-      console.error("Upstash Redis GET error:", error);
-    }
-  }
-
+  return NextResponse.json(await getPortfolioData(), { headers: noStore });
+}
+export async function POST(request: NextRequest) {
   try {
-    return NextResponse.json(getLocalData());
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to read portfolio data" }, { status: 500 });
-  }
+    requireSameOrigin(request);
+    if (!await isAdmin(request)) throw new HttpError(401, "Your admin session has expired. Please sign in again.");
+    const parsed = portfolioSchema.safeParse(await readJson(request));
+    if (!parsed.success) {
+      const issue = parsed.error.issues[0];
+      throw new HttpError(400, `${issue.path.join(".")}: ${issue.message}`);
+    }
+    const data = normalizePortfolio(parsed.data);
+    const result = await redisCommand<string>(["SET", PORTFOLIO_KEY, JSON.stringify(data)]);
+    if (result !== "OK") throw new Error("Portfolio was not saved");
+    revalidatePath("/");
+    revalidatePath("/resume");
+    revalidatePath("/projects/[slug]", "page");
+    revalidatePath("/sitemap.xml");
+    return NextResponse.json({ success: true, message: "Changes saved for all visitors.", data }, { headers: noStore });
+  } catch (error) { return errorResponse(error); }
 }

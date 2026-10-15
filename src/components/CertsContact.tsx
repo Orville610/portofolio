@@ -1,151 +1,57 @@
 "use client";
 
-import React, { useState } from "react";
-import { Mail, Copy, Check, BadgeCheck, MessageSquare } from "lucide-react";
-import { motion } from "framer-motion";
-
+import { useEffect, useRef, useState } from "react";
+import { BadgeCheck, Check, Copy, Mail } from "lucide-react";
 import { usePortfolio } from "@/context/PortfolioContext";
+import { externalUrl } from "@/lib/portfolio";
 import SpotlightCard from "./reactbits/SpotlightCard";
-import DecryptedText from "./reactbits/DecryptedText";
 
 export default function CertsContact() {
-  const { portfolioData } = usePortfolio();
-  const certifications = portfolioData.certifications;
-  const [copiedEmail, setCopiedEmail] = useState(false);
-
-  const handleCopyEmail = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    navigator.clipboard.writeText("orville@rville.site");
-    setCopiedEmail(true);
-    setTimeout(() => setCopiedEmail(false), 2000);
-  };
-
+  const { portfolioData: { certifications, settings } } = usePortfolio();
+  const [copyState, setCopyState] = useState<"idle" | "copying" | "copied" | "error">("idle");
+  const resetRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (resetRef.current) clearTimeout(resetRef.current); }, []);
+  async function copyEmail() {
+    if (resetRef.current) clearTimeout(resetRef.current);
+    setCopyState("copying");
+    try {
+      if (!navigator.clipboard) throw new Error("Clipboard unavailable");
+      await navigator.clipboard.writeText(settings.email);
+      setCopyState("copied");
+      resetRef.current = setTimeout(() => setCopyState("idle"), 2500);
+    } catch { setCopyState("error"); }
+  }
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 gap-12 py-12 overflow-hidden" id="certs">
-      {/* Certifications Panel */}
-      <motion.div
-        initial={{ opacity: 0, x: -30 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="flex flex-col justify-start"
-      >
-        <div className="flex flex-col space-y-4 mb-8">
-          <h2 className="font-headline-md text-3xl font-bold tracking-tight text-on-surface flex items-center gap-3">
-            <BadgeCheck className="text-primary w-7 h-7" />
-            <DecryptedText text="Certifications" animateOn="view" speed={35} />
-          </h2>
-        </div>
+    <section id="certs" className="grid grid-cols-1 gap-10 py-6 md:grid-cols-2 md:py-10" aria-labelledby="certs-title">
+      <div>
+        <h2 id="certs-title" className="mb-6 flex items-center gap-3 font-headline-md text-2xl font-bold tracking-tight md:text-3xl"><BadgeCheck className="h-6 w-6 shrink-0 text-primary-text" aria-hidden="true" />Learning &amp; Certifications</h2>
         <ul className="space-y-6">
-          {certifications.map((cert, index) => (
-            <motion.li
-              key={index}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.15 }}
-              className="flex items-start gap-3 group"
-            >
-              <span className="font-code-sm text-primary mt-1 font-bold select-none">&gt;</span>
-              <div>
-                <h3 className="font-label-md text-base font-semibold text-on-surface group-hover:text-primary transition-colors">
-                  {cert.title}
-                </h3>
-                <p className="font-body-md text-sm text-on-surface-variant text-muted-foreground mt-1 leading-relaxed">
-                  {cert.desc}
-                </p>
-              </div>
-            </motion.li>
-          ))}
+          {certifications.map((cert, index) => <li key={cert.title + index}>
+            <h3 className="font-semibold">{cert.title}</h3>
+            {(cert.issuer || cert.issuedAt) && <p className="mt-1 text-xs text-primary-text">{[cert.issuer, cert.issuedAt].filter(Boolean).join(" · ")}</p>}
+            <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">{cert.desc}</p>
+            {externalUrl(cert.credentialUrl) && <a href={externalUrl(cert.credentialUrl)} className="inline-flex min-h-11 items-center text-sm font-medium text-primary-text" aria-label={`View credential for ${cert.title}`}>View credential ↗</a>}
+          </li>)}
         </ul>
-      </motion.div>
-
-      {/* Sleek Initiate Connection Form Panel wrapped in SpotlightCard */}
-      <motion.div
-        initial={{ opacity: 0, x: 30 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        whileHover={{ y: -4 }}
-        className="h-full"
-        id="contact"
-      >
-        <SpotlightCard className="p-6 transition-all duration-300 hover:border-primary/50">
-          <div className="flex flex-col space-y-1.5 mb-4">
-            <h2 className="font-headline-md text-2xl font-semibold leading-none tracking-tight text-on-surface">
-              <DecryptedText text="Initiate Connection" animateOn="view" speed={30} />
-            </h2>
-            <p className="font-body-md text-sm text-on-surface-variant text-muted-foreground leading-relaxed">
-              Looking to collaborate on infrastructure projects or discuss self-hosting solutions? Ping me.
-            </p>
-          </div>
-
-        <div className="space-y-4 pt-4">
-          {/* Email Row */}
-          <div className="grid gap-2">
-            <label className="font-label-md text-sm font-medium leading-none text-on-surface font-semibold" htmlFor="email">
-              Email address
-            </label>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full rounded-md border border-outline-variant bg-background p-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-primary focus-within:border-primary text-on-surface-variant transition-all duration-300">
-              <div className="flex items-center gap-2 flex-grow min-w-0">
-                <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
-                <span className="font-code-sm truncate select-all">orville@rville.site</span>
-              </div>
-              <div className="flex items-center justify-end gap-2 border-t border-outline-variant/30 pt-2 sm:pt-0 sm:border-0 sm:ml-auto">
-                <button
-                  onClick={handleCopyEmail}
-                  className="inline-flex items-center justify-center rounded-md text-xs font-medium bg-surface-container-low hover:bg-surface-container hover:text-on-surface h-8 px-3 transition-colors border border-outline-variant flex-grow sm:flex-grow-0"
-                  title="Copy Email"
-                >
-                  {copiedEmail ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 text-secondary mr-1.5" />
-                      Copied
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3.5 h-3.5 mr-1.5" />
-                      Copy
-                    </>
-                  )}
-                </button>
-                <a
-                  className="inline-flex items-center justify-center rounded-md text-xs font-medium bg-primary text-on-primary hover:bg-primary/90 h-8 px-3 transition-colors flex-grow sm:flex-grow-0"
-                  href="mailto:orville@rville.site"
-                >
-                  Send Email
-                </a>
-              </div>
+      </div>
+      <div id="contact">
+        <SpotlightCard className="p-5 md:p-6">
+          <h2 className="font-headline-md text-2xl font-semibold">Let’s connect</h2>
+          <p className="mb-6 mt-3 text-sm leading-relaxed text-on-surface-variant">Have a web development, Linux, or self-hosting project in mind? Get in touch.</p>
+          <p className="mb-2 text-sm font-semibold">Email address</p>
+          <div className="rounded-md border border-outline-variant bg-background p-3">
+            <div className="flex min-w-0 items-center gap-2 text-sm"><Mail className="h-4 w-4 shrink-0 text-on-surface-variant" aria-hidden="true" /><span className="break-all select-all">{settings.email}</span></div>
+            <div className="mt-4 flex gap-2">
+              <button type="button" onClick={() => void copyEmail()} disabled={copyState === "copying"} className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-md border border-outline-variant bg-surface-container-low px-3 text-sm font-semibold disabled:opacity-60">
+                {copyState === "copied" ? <Check className="h-4 w-4" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
+                {copyState === "copied" ? "Copied" : copyState === "copying" ? "Copying…" : "Copy"}
+              </button>
+              <a href={`mailto:${settings.email}`} className="inline-flex min-h-11 flex-1 items-center justify-center rounded-md bg-primary px-3 text-sm font-semibold text-on-primary hover:bg-primary/90">Send Email</a>
             </div>
           </div>
-
-          {/* WhatsApp Row (Temporarily Hidden)
-          <div className="grid gap-2">
-            <label className="font-label-md text-sm font-medium leading-none text-on-surface font-semibold" htmlFor="whatsapp">
-              WhatsApp
-            </label>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full rounded-md border border-outline-variant bg-background p-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-within:ring-2 focus-within:ring-primary focus-within:border-primary text-on-surface-variant transition-all duration-300">
-              <div className="flex items-center gap-2 flex-grow min-w-0">
-                <MessageSquare className="w-4 h-4 text-muted-foreground shrink-0" />
-                <span className="font-code-sm truncate">Direct Message</span>
-              </div>
-              <div className="flex items-center justify-end gap-2 border-t border-outline-variant/30 pt-2 sm:pt-0 sm:border-0 sm:ml-auto">
-                <a
-                  className="inline-flex items-center justify-center rounded-md text-xs font-medium bg-primary text-on-primary hover:bg-primary/90 h-8 px-4 transition-colors flex-grow sm:flex-grow-0"
-                  href="https://wa.me/6281234567890"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Message
-                </a>
-              </div>
-            </div>
-          </div>
-          */}
-        </div>
+          <p className="mt-3 min-h-5 text-sm text-on-surface-variant" role="status">{copyState === "error" ? "Could not copy. Select the address above or use Send Email." : copyState === "copied" ? "Email address copied." : ""}</p>
         </SpotlightCard>
-      </motion.div>
+      </div>
     </section>
   );
 }
