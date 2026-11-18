@@ -2,11 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw } from "lucide-react";
+import { dynaura } from "dynaura";
 import { usePortfolio } from "@/context/PortfolioContext";
 import { site } from "@/lib/site";
 
 interface LogEntry { type: "input" | "output"; text: string }
-const commands = ["help", "about", "skills", "experience", "projects", "certs", "contact", "neofetch", "confetti", "admin", "sudo", "weather", "matrix", "speedtest", "clear"];
+const commands = ["help", "about", "skills", "experience", "projects", "certs", "contact", "neofetch", "confetti", "dynaura", "admin", "sudo", "weather", "matrix", "speedtest", "clear"];
 
 export default function Terminal() {
   const { portfolioData, isAdmin, login, setShowAdminPanel } = usePortfolio();
@@ -62,6 +63,7 @@ certs       - Learning and certifications
 contact     - Contact details
 neofetch    - Portfolio summary (simulation)
 confetti    - Celebrate
+dynaura     - Test Dynamic Island toast
 admin       - Sign in to edit the portfolio
 sudo        - Terminal profile commands
 weather     - Sample weather output (not live)
@@ -82,7 +84,14 @@ Use ↑/↓ for history and Ctrl+Space for autocomplete. Tab moves between contr
           try { const { default: confetti } = await import("canvas-confetti"); confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 }, disableForReducedMotion: true }); }
           catch { output("Celebration ready 🎉"); }
         }
+        dynaura.success({ title: "Celebration", description: "Thanks for exploring my work! 🎉" });
         output("🎉 Thanks for exploring my work!"); break;
+      case "dynaura":
+        dynaura.info({
+          title: "Dynamic Island",
+          description: "Dynaura is active on rville.dev!",
+        });
+        output("🏝️ Triggered Dynaura Dynamic Island notification."); break;
       case "weather": output("Sample weather — not live data\nMakassar: 31°C, partly cloudy.\nThis is a terminal demonstration."); break;
       case "speedtest": output("SIMULATION — no network speed was measured.\nExample download: 945 Mbps\nExample upload: 480 Mbps\nExample latency: 4 ms"); break;
       case "matrix": output("Wake up, Neo…\n10100110 01011010 10110100"); break;

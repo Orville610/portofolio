@@ -14,6 +14,7 @@
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "canvas-confetti": "^1.9.4",
+    "dynaura": "^0.2.2",
     "lucide-react": "^1.18.0",
     "next": "16.4.1",
     "react": "19.3.1",

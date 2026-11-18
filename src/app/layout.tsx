@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
+import { Toaster } from "dynaura";
+import "dynaura/styles.css";
 import PWARegister from "@/components/PWARegister";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -24,6 +26,7 @@ export const viewport: Viewport = { themeColor: "#0f0f11", colorScheme: "dark" }
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="en" className="dark">
     <body className="flex min-h-screen flex-col bg-background font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container">
+      <Toaster position="top" theme="dark" />
       <a href="#main-content" className="skip-link print:hidden">Skip to content</a>
       {children}
       <PWARegister />
