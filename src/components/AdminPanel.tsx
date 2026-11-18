@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { LogOut, Plus, Save, Trash2, X } from "lucide-react";
+import { dynaura } from "dynaura";
 import { usePortfolio, type CertificationData, type ExperienceData, type ProjectData } from "@/context/PortfolioContext";
 import type { SaveResult } from "@/lib/portfolio";
 
@@ -40,7 +41,19 @@ export default function AdminPanel() {
     setBusy(true); setResult(null);
     try {
       const data = { ...draft, projects: draft.projects.map(item => ({ ...item, tags: [...new Set(item.tags.map(tag => tag.trim()).filter(Boolean))] })) };
-      setResult(await saveData(data));
+      const response = await saveData(data);
+      setResult(response);
+      if (response.success) {
+        dynaura.success({
+          title: "Changes Saved",
+          description: "Portfolio updated successfully.",
+        });
+      } else {
+        dynaura.error({
+          title: "Save Failed",
+          description: response.message || "Failed to save portfolio changes.",
+        });
+      }
     }
     finally { setBusy(false); }
   }

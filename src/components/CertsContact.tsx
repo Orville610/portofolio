@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { BadgeCheck, Check, Copy, Mail } from "lucide-react";
+import { dynaura } from "dynaura";
 import { usePortfolio } from "@/context/PortfolioContext";
 import { externalUrl } from "@/lib/portfolio";
 import SpotlightCard from "./reactbits/SpotlightCard";
@@ -18,8 +19,18 @@ export default function CertsContact() {
       if (!navigator.clipboard) throw new Error("Clipboard unavailable");
       await navigator.clipboard.writeText(settings.email);
       setCopyState("copied");
+      dynaura.success({
+        title: "Email Copied",
+        description: settings.email,
+      });
       resetRef.current = setTimeout(() => setCopyState("idle"), 2500);
-    } catch { setCopyState("error"); }
+    } catch {
+      setCopyState("error");
+      dynaura.error({
+        title: "Copy Failed",
+        description: "Clipboard unavailable. Please select and copy manually.",
+      });
+    }
   }
   return (
     <section id="certs" className="grid grid-cols-1 gap-10 py-6 md:grid-cols-2 md:py-10" aria-labelledby="certs-title">
